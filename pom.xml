@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- <parent> -->
+	<!-- 	<groupId>net.imglib2</groupId> -->
+	<!-- 	<artifactId>pom-imglib2</artifactId> -->
+	<!-- 	<version>8.0.0</version> -->
+	<!-- 	<relativePath /> -->
+	<!-- </parent> -->
+
+	<groupId>net.imglib2</groupId>
+	<artifactId>imglib2-python-fat-jar</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<name>ImgLib2 Python Fat Jar</name>
+	<description>Build fat jar that contains all ImgLib2 and BigDataViewer dependencies that are necessary to access ImgLib2 from Python.</description>
+
+	<repositories>
+		<!-- NB: for SciJava dependencies -->
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- ImgLib2 dependencies -->
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+            <version>4.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-algorithm</artifactId>
+            <version>0.6.3-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2-unsafe</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<!-- BigDataViewer dependencies -->
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-core</artifactId>
+            <version>3.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-vistools</artifactId>
+            <version>1.0.0-beta-5-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<packageName>net.imglib2.python.fat.jar</packageName>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+            <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+        				<descriptorRef>jar-with-dependencies</descriptorRef>
+			       	</descriptorRefs>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <version>2.3.1</version>
+  <configuration>
+    <source>1.8</source>
+    <target>1.8</target>
+  </configuration>
+</plugin>
+		</plugins>
+	</build>
+</project>
