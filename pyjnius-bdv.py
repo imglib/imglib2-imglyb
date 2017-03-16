@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 # config needs to be set-up before "import jnius" is run
 import jnius_config
 jnius_config.add_options('-Xmx40g')
