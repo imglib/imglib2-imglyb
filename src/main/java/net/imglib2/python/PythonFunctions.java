@@ -1,4 +1,4 @@
-package net.imglib.python;
+package net.imglib2.python;
 
 import java.util.concurrent.ExecutionException;
 
