@@ -49,6 +49,10 @@
 		</dependency>
 	</dependencies>
 
+	<properties>
+        <enforcer.skip>true</enforcer.skip>
+    </properties>
+
 	<build>
 		<plugins>
 			<plugin>
