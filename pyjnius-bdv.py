@@ -106,7 +106,8 @@ if __name__ == "__main__":
 	# seem to need that one
 	autoclass('org.jnius.NativeInvocationHandler')
 
-	bfly = vigra.readImage('/home/phil/Dropbox/misc/butterfly.jpg').astype(np.uint32)
+
+	bfly = vigra.readImage(conda_prefix + '/share/imglyb/butterfly.jpg').astype(np.uint32)
 	bflyArgb = \
 	np.left_shift(bfly[...,0], np.zeros(bfly.shape[:-1],dtype=np.uint8) + 16) + \
 	np.left_shift(bfly[...,1], np.zeros(bfly.shape[:-1],dtype=np.uint8) + 8)  + \
