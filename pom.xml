@@ -10,10 +10,10 @@
 	<!-- </parent> -->
 
 	<groupId>net.imglib2</groupId>
-	<artifactId>imglib2-python-fat-jar</artifactId>
+	<artifactId>imglib2-imglyb</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>ImgLib2 Python Fat Jar</name>
+	<name>ImgLib2 ImgLyb</name>
 	<description>Build fat jar that contains all ImgLib2 and BigDataViewer dependencies that are necessary to access ImgLib2 from Python.</description>
 
 	<repositories>
