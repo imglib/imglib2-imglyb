@@ -8,6 +8,7 @@ import numpy as np
 
 __all__ = (
 	'to_imglib',
+	'to_imglib_argb',
 	'options2D'
 )
 
@@ -45,11 +46,18 @@ def to_imglib( source ):
 	if source.flags[ 'CARRAY' ]:
 		address = _get_address( source )
 		if not source.dtype in numpy_dtype_to_conversion_method:
-			print (source.dtype == np.float_ )
-			for it in  numpy_dtype_to_conversion_method.items():
-				print (it)
 			raise NotImplementedError( "Cannot convert dtype to ImgLib2 type yet: {}".format( source.dtype ) )
 		return numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape[::-1] )
+	else:
+		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
+
+
+def to_imglib_argb( source ):
+	if source.flags[ 'CARRAY' ]:
+		address = _get_address( source )
+		if not source.dtype == np.dtype( 'int32' ):
+			raise NotImplementedError( "source.dtype must be in32" )
+		return NumpyToImgLibConversions.toARGB( address, *source.shape[::-1] )
 	else:
 		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
 
