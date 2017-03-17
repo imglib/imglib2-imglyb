@@ -42,7 +42,7 @@ def _get_address( source ):
 
 # how to use type hints for python < 3.5?
 def to_imglib( source ):
-	if source.flags[ 'CARRAY' ]:
+	if source.flags[ 'FARRAY' ]:
 		address = _get_address( source )
 		if not source.dtype in numpy_dtype_to_conversion_method:
 			print (source.dtype == np.float_ )
@@ -51,7 +51,7 @@ def to_imglib( source ):
 			raise NotImplementedError( "Cannot convert dtype to ImgLib2 type yet: {}".format( source.dtype ) )
 		return numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape )
 	else:
-		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
+		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not fortran-style contiguous" )
 
 def options2D():
 	return BdvOptions.options().is2D()
