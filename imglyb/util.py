@@ -49,7 +49,7 @@ def to_imglib( source ):
 			for it in  numpy_dtype_to_conversion_method.items():
 				print (it)
 			raise NotImplementedError( "Cannot convert dtype to ImgLib2 type yet: {}".format( source.dtype ) )
-		return numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape )
+		return numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape[::-1] )
 	else:
 		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
 
