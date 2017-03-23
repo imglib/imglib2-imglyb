@@ -55,8 +55,8 @@ def to_imglib( source ):
 def to_imglib_argb( source ):
 	if source.flags[ 'CARRAY' ]:
 		address = _get_address( source )
-		if not source.dtype == np.dtype( 'int32' ):
-			raise NotImplementedError( "source.dtype must be in32" )
+		if not ( source.dtype == np.dtype( 'int32' ) or source.dtype == np.dtype( 'uint32' ) ):
+			raise NotImplementedError( "source.dtype must be int32 or uint32" )
 		return NumpyToImgLibConversions.toARGB( address, *source.shape[::-1] )
 	else:
 		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
