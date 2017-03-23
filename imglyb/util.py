@@ -2,7 +2,7 @@ import ctypes
 
 from collections import defaultdict
 
-from jnius import autoclass
+from jnius import autoclass, PythonJavaClass, java_method
 
 import numpy as np
 
@@ -63,3 +63,37 @@ def to_imglib_argb( source ):
 
 def options2D():
 	return BdvOptions.options().is2D()
+
+
+class GenericOverlayRenderer( PythonJavaClass ):
+	__javainterfaces__ = ['net/imglib2/ui/OverlayRenderer']
+
+	def __init__( self, draw_overlays=lambda g : None,  set_canvas_size=lambda w, h : None ):
+		super(GenericOverlayRenderer, self).__init__()
+		self.draw_overlays = draw_overlays
+		self.set_canvas_size = set_canvas_size
+
+	@java_method('(Ljava/awt/Graphics;)V')
+	def drawOverlays( self, g ):
+		self.draw_overlays( g )
+
+	@java_method('(II)V')
+	def setCanvasSize( self, width, height ):
+		self.set_canvas_size( width, height )
+
+
+class GenericMouseMotionListener( PythonJavaClass ):
+	__javainterfaces__ = ['java/awt/event/MouseMotionListener']
+
+	def __init__( self, mouse_dragged = lambda e : None, mouse_moved = lambda e : None ):
+		super(GenericMouseMotionListener, self).__init__()
+		self.mouse_dragged = mouse_dragged
+		self.mouse_moved = mouse_moved
+
+	@java_method('(Ljava/awt/event/MouseEvent;)V')
+	def mouseDragged( self, e ):
+		self.mouse_dragged( e )
+
+	@java_method('(Ljava/awt/event/MouseEvent;)V')
+	def mouseMoved( self, e ):
+		self.mouse_moved( e )
