@@ -23,6 +23,9 @@ Views = autoclass('net.imglib2.view.Views')
 BdvFunctions = autoclass('bdv.util.BdvFunctions')
 BdvOptions = autoclass('bdv.util.BdvOptions')
 
+# Guard
+ReferenceGuardingRandomAccessibleInterval = autoclass( 'net/imglib2/python/ReferenceGuardingRandomAccessibleInterval' )
+
 numpy_dtype_to_conversion_method = {
 	np.dtype( 'complex64' )  : NumpyToImgLibConversions.toComplexFloat,
 	np.dtype( 'complex128' ) : NumpyToImgLibConversions.toComplexDouble,
@@ -39,10 +42,20 @@ numpy_dtype_to_conversion_method = {
 	}
 
 def _get_address( source ):
-	return source.ctypes.data_as( ctypes.c_void_p ).value	
+	return source.ctypes.data_as( ctypes.c_void_p ).value
+
+class ReferenceGuard( PythonJavaClass ):
+	__javainterfaces__ = [ 'net/imglib2/python/ReferenceGuardingRandomAccessibleInterval$ReferenceHolder' ]
+	def __init__( self, *args, **kwargs ):
+		super( ReferenceGuard, self ).__init__()
+		self.args = args
 
 # how to use type hints for python < 3.5?
 def to_imglib( source ):
+	return ReferenceGuardingRandomAccessibleInterval( _to_imglib( source ), ReferenceGuard( source ) )
+
+# how to use type hints for python < 3.5?
+def _to_imglib( source ):
 	if source.flags[ 'CARRAY' ]:
 		address = _get_address( source )
 		if not source.dtype in numpy_dtype_to_conversion_method:
@@ -51,8 +64,10 @@ def to_imglib( source ):
 	else:
 		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
 
-
 def to_imglib_argb( source ):
+	return ReferenceGuardingRandomAccessibleInterval( _to_imglib_argb( source ), ReferenceGuard( source ) )
+
+def _to_imglib_argb( source ):
 	if source.flags[ 'CARRAY' ]:
 		address = _get_address( source )
 		if not ( source.dtype == np.dtype( 'int32' ) or source.dtype == np.dtype( 'uint32' ) ):
