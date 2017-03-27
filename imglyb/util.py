@@ -42,7 +42,7 @@ numpy_dtype_to_conversion_method = {
 	}
 
 def _get_address( source ):
-	return source.ctypes.data_as( ctypes.c_void_p ).value
+	return source.ctypes.data
 
 class ReferenceGuard( PythonJavaClass ):
 	__javainterfaces__ = [ 'net/imglib2/python/ReferenceGuardingRandomAccessibleInterval$ReferenceHolder' ]
