@@ -1,3 +1,5 @@
+from __future__ import division
+
 import ctypes
 
 from collections import defaultdict
@@ -56,12 +58,26 @@ def to_imglib( source ):
 
 # how to use type hints for python < 3.5?
 def _to_imglib( source ):
-	if source.flags[ 'CARRAY' ]:
-		address = _get_address( source )
-		if not source.dtype in numpy_dtype_to_conversion_method:
-			raise NotImplementedError( "Cannot convert dtype to ImgLib2 type yet: {}".format( source.dtype ) )
+	address = _get_address( source )
+	if not source.dtype in numpy_dtype_to_conversion_method:
+		raise NotImplementedError( "Cannot convert dtype to ImgLib2 type yet: {}".format( source.dtype ) )
+	elif source.flags[ 'CARRAY' ]:
+		print( "FOUND CARRAY", source.shape )
 		return numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape[::-1] )
+	# needs extra check for 'F_CONTIGUOUS' cf numpy/numpy#5721
+	elif source.flags[ 'F_CONTIGUOUS' ] and source.flags[ 'FARRAY' ]:
+		rai = numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape )
+		print( "FOUND FARRAY!", source.shape )
+		# for i in range( source.ndim // 2 ):
+		# 	from_axis = i
+		# 	to_axis = source.ndim - 1 -i
+		# 	print( "Permuting ", from_axis, "and", to_axis, rai, source.ndim )
+		# 	rai = Views.permute( rai, from_axis, to_axis )
+		# 	print( "After permutation" )
+		return rai
 	else:
+		indices_sorted_by_stride = tuple( t[0] for t in sorted( zip( range( source.ndim ), source.strides ), key=lambda x :x[1] ) )
+		print( indices_sorted_by_stride )
 		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
 
 def to_imglib_argb( source ):
