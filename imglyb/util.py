@@ -78,7 +78,6 @@ def _to_imglib( source ):
 	if not source.dtype in numpy_dtype_to_conversion_method:
 		raise NotImplementedError( "Cannot convert dtype to ImgLib2 type yet: {}".format( source.dtype ) )
 	elif source.flags[ 'CARRAY' ]:
-		print( "FOUND CARRAY", source.shape )
 		return numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape[::-1] )
 	else:
 		stride = np.array( source.strides[::-1] ) / source.itemsize
