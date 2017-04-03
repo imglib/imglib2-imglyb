@@ -17,7 +17,7 @@ If you are running Linux or, with limitations, OSX, you can get `imglib2-imlgyb`
 ```bash
 conda install -c hanslovsky imglib2-imglyb
 ```
-Adjust the python version according to your needs.
+Re-activate the environment after installation to correctly set the environment variables.
 If this does not work for you, please follow the build instructions below.
 
 ### Requirements
