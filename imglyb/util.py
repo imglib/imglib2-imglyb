@@ -19,6 +19,7 @@ Random = autoclass( 'java.util.Random' )
 
 # imglib
 NumpyToImgLibConversions = autoclass('net.imglib2.python.NumpyToImgLibConversions')
+NumpyToImgLibConversionsWithStride = autoclass('net.imglib2.python.NumpyToImgLibConversionsWithStride')
 Views = autoclass('net.imglib2.view.Views')
 
 # bigdataviewer
@@ -43,6 +44,21 @@ numpy_dtype_to_conversion_method = {
 	np.dtype( 'uint64' )     : NumpyToImgLibConversions.toUnsignedLong
 	}
 
+numpy_dtype_to_conversion_with_stride_method = {
+	np.dtype( 'complex64' )  : NumpyToImgLibConversionsWithStride.toComplexFloat,
+	np.dtype( 'complex128' ) : NumpyToImgLibConversionsWithStride.toComplexDouble,
+	np.dtype( 'float32' )    : NumpyToImgLibConversionsWithStride.toFloat,
+	np.dtype( 'float64' )    : NumpyToImgLibConversionsWithStride.toDouble,
+	np.dtype( 'int8' )       : NumpyToImgLibConversionsWithStride.toByte,
+	np.dtype( 'int16' )      : NumpyToImgLibConversionsWithStride.toShort,
+	np.dtype( 'int32' )      : NumpyToImgLibConversionsWithStride.toInt,
+	np.dtype( 'int64' )      : NumpyToImgLibConversionsWithStride.toLong,
+	np.dtype( 'uint8' )      : NumpyToImgLibConversionsWithStride.toUnsignedByte,
+	np.dtype( 'uint16' )     : NumpyToImgLibConversionsWithStride.toUnsignedShort,
+	np.dtype( 'uint32' )     : NumpyToImgLibConversionsWithStride.toUnsignedInt,
+	np.dtype( 'uint64' )     : NumpyToImgLibConversionsWithStride.toUnsignedLong
+	}
+
 def _get_address( source ):
 	return source.ctypes.data
 
@@ -64,33 +80,22 @@ def _to_imglib( source ):
 	elif source.flags[ 'CARRAY' ]:
 		print( "FOUND CARRAY", source.shape )
 		return numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape[::-1] )
-	# needs extra check for 'F_CONTIGUOUS' cf numpy/numpy#5721
-	elif source.flags[ 'F_CONTIGUOUS' ] and source.flags[ 'FARRAY' ]:
-		rai = numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape )
-		print( "FOUND FARRAY!", source.shape )
-		# for i in range( source.ndim // 2 ):
-		# 	from_axis = i
-		# 	to_axis = source.ndim - 1 -i
-		# 	print( "Permuting ", from_axis, "and", to_axis, rai, source.ndim )
-		# 	rai = Views.permute( rai, from_axis, to_axis )
-		# 	print( "After permutation" )
-		return rai
 	else:
-		indices_sorted_by_stride = tuple( t[0] for t in sorted( zip( range( source.ndim ), source.strides ), key=lambda x :x[1] ) )
-		print( indices_sorted_by_stride )
-		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
+		stride = np.array( source.strides[::-1] ) / source.itemsize
+		return numpy_dtype_to_conversion_with_stride_method[ source.dtype]( address, tuple( stride ), source.shape[::-1] )
 
 def to_imglib_argb( source ):
 	return ReferenceGuardingRandomAccessibleInterval( _to_imglib_argb( source ), ReferenceGuard( source ) )
 
 def _to_imglib_argb( source ):
+	address = _get_address( source )
+	if not ( source.dtype == np.dtype( 'int32' ) or source.dtype == np.dtype( 'uint32' ) ):
+		raise NotImplementedError( "source.dtype must be int32 or uint32" )
 	if source.flags[ 'CARRAY' ]:
-		address = _get_address( source )
-		if not ( source.dtype == np.dtype( 'int32' ) or source.dtype == np.dtype( 'uint32' ) ):
-			raise NotImplementedError( "source.dtype must be int32 or uint32" )
 		return NumpyToImgLibConversions.toARGB( address, *source.shape[::-1] )
 	else:
-		raise NotImplementedError( "Cannot convert ndarrays yet that are not aligned or not c-style contiguous" )
+		stride = np.array( source.strides[::-1] ) / source.itemsize
+		return NumpyToImgLibConversionsWithStride.toARGB( address, tuple( stride ), source.shape[::-1] )
 
 def options2D():
 	return BdvOptions.options().is2D()
