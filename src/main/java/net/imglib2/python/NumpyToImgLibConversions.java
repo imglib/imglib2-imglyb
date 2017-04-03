@@ -336,10 +336,4 @@ public class NumpyToImgLibConversions
 		}
 	}
 
-	// TODO write method that creates Views based on numpy array flags
-	public static < T > RandomAccessibleInterval< T > respectNumpyOrder( final RandomAccessibleInterval< T > input )
-	{
-		return input;
-	}
-
 }
