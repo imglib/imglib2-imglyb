@@ -67,6 +67,6 @@ needs to come before any of
 ```python
 from imglyb import util
 import jnius
-from pyjnius import *
+from jnius import *
 ```
 It is best to follow and extend the [imglyb-examples](https://github.com/hanslovsky/imglyb-examples) according to your needs.
