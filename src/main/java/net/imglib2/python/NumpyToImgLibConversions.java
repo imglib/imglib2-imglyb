@@ -1,8 +1,20 @@
 package net.imglib2.python;
 
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.converter.Converter;
 import net.imglib2.converter.Converters;
+import net.imglib2.converter.readwrite.longaccess.ARGBLongAccessTypeARGBTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.ByteLongAccessTypeByteTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.ComplexDoubleLongAccessTypeComplexDoubleTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.ComplexFloatLongAccessTypeComplexFloatTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.DoubleLongAccessTypeDoubleTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.FloatLongAccessTypeFloatTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.IntLongAccessTypeIntTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.LongLongAccessTypeLongTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.ShortLongAccessTypeShortTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.UnsignedByteLongAccessTypeUnsignedByteTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.UnsignedIntLongAccessTypeUnsignedIntTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.UnsignedLongLongAccessTypeUnsignedLongTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.UnsignedShortLongAccessTypeUnsignedShortTypeConverter;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypelongaccess.ByteLongAccess;
 import net.imglib2.img.basictypelongaccess.DoubleLongAccess;
@@ -65,10 +77,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< ARGBLongAccessType, IntLongAccess > img = UnsafeImgs.argbs( access, dim );
-			final Converter< ARGBLongAccessType, ARGBType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( (RandomAccessibleInterval< ARGBLongAccessType >) img, converter, new ARGBType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new ARGBLongAccessTypeARGBTypeConverter() );
 		}
 	}
 
@@ -87,10 +96,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< ComplexFloatLongAccessType, FloatLongAccess > img = UnsafeImgs.complexFloats( access, dim );
-			final Converter< ComplexFloatLongAccessType, ComplexFloatType > converter = ( s, t ) -> {
-				t.set( s.getRealFloat(), s.getImaginaryFloat() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< ComplexFloatLongAccessType > ) img, converter, new ComplexFloatType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new ComplexFloatLongAccessTypeComplexFloatTypeConverter() );
 		}
 	}
 
@@ -109,10 +115,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< ComplexDoubleLongAccessType, DoubleLongAccess > img = UnsafeImgs.complexDoubles( access, dim );
-			final Converter< ComplexDoubleLongAccessType, ComplexDoubleType > converter = ( s, t ) -> {
-				t.set( s.getRealDouble(), s.getImaginaryDouble() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< ComplexDoubleLongAccessType > ) img, converter, new ComplexDoubleType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new ComplexDoubleLongAccessTypeComplexDoubleTypeConverter() );
 		}
 	}
 
@@ -131,10 +134,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< FloatLongAccessType, FloatUnsafe > img = UnsafeImgs.floats( access, dim );
-			final Converter< FloatLongAccessType, FloatType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< FloatLongAccessType > ) img, converter, new FloatType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new FloatLongAccessTypeFloatTypeConverter() );
 		}
 	}
 
@@ -153,10 +153,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< DoubleLongAccessType, DoubleUnsafe > img = UnsafeImgs.doubles( access, dim );
-			final Converter< DoubleLongAccessType, DoubleType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< DoubleLongAccessType > ) img, converter, new DoubleType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new DoubleLongAccessTypeDoubleTypeConverter() );
 		}
 	}
 
@@ -175,10 +172,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< ByteLongAccessType, ByteLongAccess > img = UnsafeImgs.bytes( access, dim );
-			final Converter< ByteLongAccessType, ByteType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< ByteLongAccessType > ) img, converter, new ByteType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new ByteLongAccessTypeByteTypeConverter() );
 		}
 	}
 
@@ -197,10 +191,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< ShortLongAccessType, ShortLongAccess > img = UnsafeImgs.shorts( access, dim );
-			final Converter< ShortLongAccessType, ShortType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< ShortLongAccessType > ) img, converter, new ShortType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new ShortLongAccessTypeShortTypeConverter() );
 		}
 	}
 
@@ -219,10 +210,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< IntLongAccessType, IntLongAccess > img = UnsafeImgs.ints( access, dim );
-			final Converter< IntLongAccessType, IntType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< IntLongAccessType > ) img, converter, new IntType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new IntLongAccessTypeIntTypeConverter() );
 		}
 	}
 
@@ -241,10 +229,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< LongLongAccessType, LongLongAccess > img = UnsafeImgs.longs( access, dim );
-			final Converter< LongLongAccessType, LongType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< LongLongAccessType > ) img, converter, new LongType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new LongLongAccessTypeLongTypeConverter() );
 		}
 	}
 
@@ -263,10 +248,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< UnsignedByteLongAccessType, ByteLongAccess > img = UnsafeImgs.unsignedBytes( access, dim );
-			final Converter< UnsignedByteLongAccessType, UnsignedByteType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< UnsignedByteLongAccessType > ) img, converter, new UnsignedByteType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new UnsignedByteLongAccessTypeUnsignedByteTypeConverter() );
 		}
 	}
 
@@ -285,10 +267,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< UnsignedShortLongAccessType, ShortLongAccess > img = UnsafeImgs.unsignedShorts( access, dim );
-			final Converter< UnsignedShortLongAccessType, UnsignedShortType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< UnsignedShortLongAccessType > ) img, converter, new UnsignedShortType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new UnsignedShortLongAccessTypeUnsignedShortTypeConverter() );
 		}
 	}
 
@@ -307,10 +286,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< UnsignedIntLongAccessType, IntLongAccess > img = UnsafeImgs.unsignedInts( access, dim );
-			final Converter< UnsignedIntLongAccessType, UnsignedIntType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< UnsignedIntLongAccessType > ) img, converter, new UnsignedIntType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new UnsignedIntLongAccessTypeUnsignedIntTypeConverter() );
 		}
 	}
 
@@ -329,10 +305,7 @@ public class NumpyToImgLibConversions
 		else
 		{
 			final UnsafeImg< UnsignedLongLongAccessType, LongLongAccess > img = UnsafeImgs.unsignedLongs( access, dim );
-			final Converter< UnsignedLongLongAccessType, UnsignedLongType > converter = ( s, t ) -> {
-				t.set( s.get() );
-			};
-			return Converters.convert( ( RandomAccessibleInterval< UnsignedLongLongAccessType > ) img, converter, new UnsignedLongType() );
+			return Converters.convertRandomAccessibleIterableInterval( img, new UnsignedLongLongAccessTypeUnsignedLongTypeConverter() );
 		}
 	}
 
