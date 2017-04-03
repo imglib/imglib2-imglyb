@@ -59,7 +59,7 @@ export JAVA_HOME=/path/to/JAVA_HOME # not necessary if using conda
 export PYJNIUS_JAR=/path/to/pyjnius/build/pyjnius.jar # not necessary if using conda
 export IMGLYB_JAR=/path/to/imglib2-imglyb/target/imglib2-imglyb-<VERSION>.jar # not necessary if using conda
 ```
-Note that the line
+Note that, in your python files, the line
 ```python
 import imglyb
 ```
