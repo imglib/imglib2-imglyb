@@ -15,7 +15,7 @@ If you are interested in using `imglib2-imglyb`, have a look at the [imglyb-exam
 
 If you are running Linux or, with limitations, OSX, you can get `imglib2-imlgyb` from conda:
 ```bash
-conda create -n imglyb -c hanslovsky python=3.5 imglib2-imglyb
+conda install -c hanslovsky imglib2-imglyb
 ```
 Adjust the python version according to your needs.
 If this does not work for you, please follow the build instructions below.
