@@ -51,6 +51,7 @@ python setup.py install
 ### Requirements
  * PyJNIus
  * Java 8
+ * numpy
 
 ### Run
 If you do not use conda you need to set your environment before using `imglib2-imglyb`:
