@@ -189,7 +189,7 @@ if __name__ == "__main__":
 	while c.hasNext():
 		print (c.next().get())
 	print( "ADDRESS MISMATCH? ", arr.ctypes.data, np.mean( arr ) )
-	print( type( arr ), type( arr.rai ) )
+	print( type( arr ), type( arr.rai ), arr.shape, arr.strides )
 	# arr = ImgLibNumpyArray( rai )
 	# # print( arr.shape, arr.dtype )
 	# b = arr[  0, 1, 2, 3 ]
