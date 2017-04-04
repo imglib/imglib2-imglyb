@@ -16,8 +16,12 @@ public class ReferenceGuardingRandomAccessibleInterval< T > extends AbstractWrap
 
 	// This variable just needs to be around until the object gets
 	// destroyed/garbage collected.
-	@SuppressWarnings( "unused" )
 	private final ReferenceHolder referenceHolder;
+
+	public ReferenceHolder getReferenceHolder()
+	{
+		return referenceHolder;
+	}
 
 	public ReferenceGuardingRandomAccessibleInterval( final RandomAccessibleInterval< T > source, final ReferenceHolder referenceHolder )
 	{
