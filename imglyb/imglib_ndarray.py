@@ -29,7 +29,7 @@ getters = {
 ctype_conversions_imglib = {
 	'FloatType' : ctypes.c_float
 }
-	
+
 
 def get_address( rai ):
 	class_name = util.Helpers.classNameSimple( rai )
@@ -37,13 +37,13 @@ def get_address( rai ):
 	if  class_name in ( 'ArrayImg', 'UnsafeImg' ):
 		access = cast( class_name_full, rai ).update( None )
 		access_type = util.Helpers.className( access )
-		
+
 		if 'basictypeaccess.array' in access_type:
 			print( "ARRAY? ", Arrays.toString( cast( access_type, access ).getCurrentStorageArray() ) )
 			return util.Helpers.getFirstArrayElementAddress( cast( access_type, access ).getCurrentStorageArray() )
 		elif 'basictypelongaccess.unsafe' in access_type:
 			return cast( access_type, access ).getAddress()
-	
+
 	return -1
 
 class ImgLibReferenceGuard( np.ndarray ):
@@ -54,16 +54,17 @@ class ImgLibReferenceGuard( np.ndarray ):
 		rai.min( access )
 		imglib_type = util.Helpers.classNameSimple( access.get() )
 		address = get_address( rai )
-		
+
 		shape = tuple( Intervals.dimensionsAsLongArray( rai ) )[::-1]
 		dtype = dtype_selector[ imglib_type ]
 		print( 'address:', address, type(address), np.prod(shape), type(int(np.prod(shape))))
 		pointer = ctypes.cast( address, ctypes.POINTER( ctype_conversions_imglib[ imglib_type ] ) )
 		print( "Contents? ", pointer.contents, UnsafeUtil.UNSAFE.getFloat( address ) )
 		order = 'C'
-		
-		obj = np.ctypeslib.as_array( pointer, shape=shape )
+
+		obj = np.ndarray.__new__( cls, buffer=np.ctypeslib.as_array( pointer, shape=shape ), shape=shape,dtype=dtype )
 		obj.setflags( write = True )
+		obj.rai = rai
 		print( "ADDRESS MISMATCH? ", address, obj.ctypes.data )
 		return obj
 
@@ -71,14 +72,14 @@ class ImgLibReferenceGuard( np.ndarray ):
 		if obj is None:
 			return
 		self.rai = obj.rai
-		
-		
+
+
 class ImgLibNumpyArray( np.ndarray ):
 
 	def __new__( cls, rai ):
 
 		class_name = util.Helper.className( rai )
-		
+
 		if 'ReferenceGuardingRandomAccessibleInterval' in class_name:
 			return cast( class_name, rai ).getReferenceHolder().args[ 0 ]
 
@@ -87,7 +88,7 @@ class ImgLibNumpyArray( np.ndarray ):
 
 		elif 'UnsafeImg' in class_name:
 			pass
-			
+
 		access = rai.randomAccess()
 		rai.min( access )
 		imglib_type = util.Helpers.classNameSimple( access.get() )
@@ -97,7 +98,7 @@ class ImgLibNumpyArray( np.ndarray ):
 		obj = np.ndarray.__new__( cls, shape=shape, dtype=dtype, buffer=None, offset=0, strides=None, order=None )
 		setattr( obj, 'rai', rai )
 		setattr( obj, 'imglib_type', imglib_type )
-		
+
 		return obj
 
 	def __array_finalize__( self, obj ):
@@ -132,11 +133,11 @@ class ImgLibNumpyArray( np.ndarray ):
 					slicing[ len( slicing ) - idx ] = obj[ len( obj ) - idx ]
 
 				print( "SLICING: ", slicing )
-				
+
 
 			else:
 				raise NotImplementedError( "__getitem__ not yet implemented for advanced indexing! Use int, slice, and Ellipsis only!" )
-		
+
 		elif isinstance( obj, int ):
 			slicing[ 0 ] = shape[0] - obj if obj < 0 else obj
 
@@ -156,10 +157,10 @@ class ImgLibNumpyArray( np.ndarray ):
 			access.setPosition( slicing )
 			val = access.get()
 			return getters[ self.imglib_type ]( val )
-			
-		
+
+
 		return None
-		
+
 
 
 if __name__ == "__main__":
@@ -182,13 +183,15 @@ if __name__ == "__main__":
 	print ( 'sum', np.sum( arr ) )
 	# rai.cursor().next().set( 1.0 )
 	arr[0,0,0,0] = 1
+	arr[ ::2, ... ] = 0
 	print ( 'sum', np.sum( arr ) )
 	c = rai.cursor()
 	while c.hasNext():
 		print (c.next().get())
-	print( "ADDRESS MISMATCH? ", arr.ctypes.data )
+	print( "ADDRESS MISMATCH? ", arr.ctypes.data, np.mean( arr ) )
+	print( type( arr ), type( arr.rai ) )
 	# arr = ImgLibNumpyArray( rai )
-	# # print( arr.shape, arr.dtype, arr.rai )
+	# # print( arr.shape, arr.dtype )
 	# b = arr[  0, 1, 2, 3 ]
 	# print( b )
-	
+
