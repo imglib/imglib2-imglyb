@@ -119,12 +119,12 @@ def fill_with_random( interval ):#, make_store, make_img ):
 	n = Intervals.numElements( interval )
 	store = VolatileOwningFloatUnsafe( n, True )# make_store( n, True )
 	dims = Intervals.dimensionsAsLongArray( interval )
-	store_cast = store # cast( 'net.imglib2.img.basictypeaccess.FloatAccess', store )
-	img = ArrayImgs.floats( store_cast, *dims ) #make_img( store, )
+	img = ArrayImgs.floats( store, *dims ) #make_img( store, )
 	np_img = ImgLibReferenceGuard( img )
 	np_img[...] = np.random.randint( 2**16, size=np_img.shape )
-	print( "Correct?", np_img.shape, np_img.dtype, np_img.min(), np_img.max(), store_cast.getValue( 0 ), store_cast.getValue( 1 ), store_cast.getValue( 2 ) )
-	return store_cast
+	# print( "Correct?", np_img.shape, np_img.dtype, np_img.min(), np_img.max(), store_cast.getValue( 0 ), store_cast.getValue( 1 ), store_cast.getValue( 2 ) )
+	# if this cast doesn't happen class information gets lost for some reason
+	return cast( util.Helpers.className( store ), store )
 
 def create_caches( ttype, vtype, name, grid, loader, primitive_type, access_flag ):
 	blockcache = DiskCellCache.createTempDirectory( name, True )
@@ -184,7 +184,7 @@ if __name__ == "__main__":
 	
 
 	bdv = util.BdvFunctions.show( img, "Cached" );
-	# bdv.getBdvHandle().getViewerPanel().setDisplayMode( DisplayMode.SINGLE );
+	bdv.getBdvHandle().getViewerPanel().setDisplayMode( DisplayMode.SINGLE );
 	util.BdvFunctions.show( proc_img, "processed", util.BdvOptions.options().addTo( bdv ) )
 
 	
