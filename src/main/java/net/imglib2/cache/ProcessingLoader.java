@@ -7,19 +7,19 @@ import net.imglib2.Interval;
 import net.imglib2.img.cell.Cell;
 import net.imglib2.img.cell.CellGrid;
 
-public class ProcessingLoader< T, A > implements CacheLoader< Long, Cell< A > >
+public class ProcessingLoader< A > implements CacheLoader< Long, Cell< A > >
 {
 
-	public static interface Processor< T, A >
+	public static interface Processor< A >
 	{
 		public A process( Interval interval );
 	}
 
-	private final Processor< T, A > proc;
+	private final Processor< A > proc;
 
 	private final CellGrid grid;
 
-	public ProcessingLoader( final Processor< T, A > proc, final CellGrid grid )
+	public ProcessingLoader( final Processor< A > proc, final CellGrid grid )
 	{
 		super();
 		this.proc = proc;

@@ -3,7 +3,9 @@ package net.imglib2.python;
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
 
+import bdv.img.cache.VolatileCachedCellImg;
 import net.imglib2.cache.UncheckedCache;
+import net.imglib2.cache.volatiles.UncheckedVolatileCache;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray;
 import net.imglib2.img.basictypelongaccess.unsafe.UnsafeUtil;
@@ -52,6 +54,11 @@ public class Helpers
 	public static LazyCellImg.Get< Cell< VolatileFloatArray > > getFromUncheckedCache( final UncheckedCache< Long, Cell< VolatileFloatArray > > cache )
 	{
 		return index -> cache.get( index );
+	}
+
+	public static < A > VolatileCachedCellImg.Get< A > getFromUncheckedVolatileCache( final UncheckedVolatileCache< Long, A > cache )
+	{
+		return ( index, hints ) -> cache.get( index, hints );
 	}
 
 }

@@ -40,7 +40,7 @@ public class CheckerboardLoader implements CacheLoader< Long, Cell< DirtyFloatAr
 		long sum = 0;
 		for ( int d = 0; d < n; ++d )
 			sum += cellGridPosition[ d ];
-		final int color = sum % 2 == 0 ? 0xff000000 : 0xff008800;
+		final float color = sum % 2 == 0 ? 0f : 65000f;
 		Arrays.fill( array.getCurrentStorageArray(), color );
 
 		return new Cell<>( cellDims, cellMin, array );
