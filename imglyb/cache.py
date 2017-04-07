@@ -38,6 +38,7 @@ WeakRefVolatileCache = autoclass('net.imglib2.cache.ref.WeakRefVolatileCache')
 CacheHints = autoclass('net.imglib2.cache.volatiles.CacheHints')
 LoadingStrategy = autoclass('net.imglib2.cache.volatiles.LoadingStrategy')
 VolatileCachedCellImg = autoclass('bdv.img.cache.VolatileCachedCellImg')
+VolatileFloatArray= autoclass('net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray')
 
 
 class LambdaProcessor( PythonJavaClass ):
@@ -139,7 +140,12 @@ class VigraProcessingFunctor():
 
 		self.functor( source_np, out=target_np, roi=( roi_min, roi_max ), **self.functor_kwargs )
 
-		return cast( util.Helpers.className( store ), store )
+		copy_store = VolatileFloatArray( n, True )
+		# print( copy_store )
+		copy = ArrayImgs.floats( copy_store, *Intervals.dimensionsAsLongArray( interval ) )
+		util.Helpers.burnIn( target, copy )
+
+		return cast( util.Helpers.className( copy_store ), copy_store )
 	
 def fill_with_random( interval ):#, make_store, make_img ):
 	n = Intervals.numElements( interval )
