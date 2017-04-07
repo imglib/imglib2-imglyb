@@ -9,10 +9,8 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.UncheckedCache;
 import net.imglib2.cache.volatiles.UncheckedVolatileCache;
 import net.imglib2.img.array.ArrayImg;
-import net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray;
 import net.imglib2.img.basictypelongaccess.unsafe.UnsafeUtil;
 import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningFloatUnsafe;
-import net.imglib2.img.cell.Cell;
 import net.imglib2.img.cell.LazyCellImg;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
@@ -56,7 +54,7 @@ public class Helpers
 		return img;
 	}
 
-	public static LazyCellImg.Get< Cell< VolatileFloatArray > > getFromUncheckedCache( final UncheckedCache< Long, Cell< VolatileFloatArray > > cache )
+	public static < A > LazyCellImg.Get< A > getFromUncheckedCache( final UncheckedCache< Long, A > cache )
 	{
 		return index -> cache.get( index );
 	}
