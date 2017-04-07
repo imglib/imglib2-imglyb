@@ -121,14 +121,13 @@ def fill_with_random( interval ):#, make_store, make_img ):
 	dims = Intervals.dimensionsAsLongArray( interval )
 	img = ArrayImgs.floats( store, *dims ) #make_img( store, )
 	np_img = ImgLibReferenceGuard( img )
-	np_img[...] = np.random.randint( 2**16, size=np_img.shape )
 	# print( "Correct?", np_img.shape, np_img.dtype, np_img.min(), np_img.max(), store_cast.getValue( 0 ), store_cast.getValue( 1 ), store_cast.getValue( 2 ) )
 	# if this cast doesn't happen class information gets lost for some reason
 	return cast( util.Helpers.className( store ), store )
 
-def create_caches( ttype, vtype, name, grid, loader, primitive_type, access_flag ):
+def create_caches( ttype, vtype, cell_cache_type, name, grid, loader, primitive_type, access_flag ):
 	blockcache = DiskCellCache.createTempDirectory( name, True )
-	diskcache = DirtyDiskCellCache(
+	diskcache = cell_cache_type(
 		blockcache,
 		grid,
 		loader,
@@ -163,14 +162,11 @@ if __name__ == "__main__":
 	vtype = types.VolatileFloatType()
 
 	cboard_loader = CheckerboardLoader( grid )
-	cboard_cache = create_caches( ttype.copy(), vtype.copy(), "Checkerboard-", grid, cboard_loader, PrimitiveType.FLOAT, AccessFlags.DIRTY )
+	cboard_cache = create_caches( ttype.copy(), vtype.copy(), DirtyDiskCellCache, "Checkerboard-", grid, cboard_loader, PrimitiveType.FLOAT, AccessFlags.DIRTY )
 
 	img = LazyCellImg( grid, cast( 'net.imglib2.type.NativeType', ttype.copy() ), util.Helpers.getFromUncheckedCache( cboard_cache.unchecked() ) )
 
 	proc = LambdaProcessor( lambda interval : fill_with_random( interval ) )
-	# interval = FinalInterval.createMinMax( 0, 0 )
-	# res = proc.process( interval )
-	# print( res.getValue( 0 ) )
 	processing_loader = ProcessingLoader( proc, grid )
 
 	maxNumLevels = 1;
@@ -178,18 +174,14 @@ if __name__ == "__main__":
 	queue = BlockingFetchQueues( maxNumLevels );
 	FetcherThreads( queue, numFetcherThreads );
 	
-	proc_cache = create_caches( ttype.copy(), vtype.copy(), "processed-", grid, processing_loader, PrimitiveType.FLOAT, AccessFlags.VOLATILE )
+	proc_cache = create_caches( ttype.copy(), vtype.copy(), DiskCellCache, "processed-", grid, processing_loader, PrimitiveType.FLOAT, AccessFlags.VOLATILE )
 	proc_img, proc_v_img = create_img_and_volatile_image( ttype.copy(), vtype.copy(), grid, proc_cache, queue )
-	
 	
 
 	bdv = util.BdvFunctions.show( img, "Cached" );
 	bdv.getBdvHandle().getViewerPanel().setDisplayMode( DisplayMode.SINGLE );
 	util.BdvFunctions.show( proc_img, "processed", util.BdvOptions.options().addTo( bdv ) )
 
-	
-	
-	
 
 	# Keep Python running until user closes Bdv window
 	vp = bdv.getBdvHandle().getViewerPanel()
