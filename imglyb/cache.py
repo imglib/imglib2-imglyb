@@ -168,7 +168,7 @@ def create_caches( ttype, vtype, cell_cache_type, name, grid, loader, primitive_
 		AccessIo.get( primitive_type, access_flag ),
 		ttype.getEntitiesPerPixel() );
 	iosync = IoSync( diskcache );
-	cache = GuardedStrongRefLoaderRemoverCache( 1000 ) \
+	cache = GuardedStrongRefLoaderRemoverCache( 500 ) \
 	  .withRemover( iosync ) \
 	  .withLoader( iosync )
 
