@@ -4,6 +4,8 @@ import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
 
 import bdv.img.cache.VolatileCachedCellImg;
+import net.imglib2.RandomAccessible;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.UncheckedCache;
 import net.imglib2.cache.volatiles.UncheckedVolatileCache;
 import net.imglib2.img.array.ArrayImg;
@@ -12,8 +14,11 @@ import net.imglib2.img.basictypelongaccess.unsafe.UnsafeUtil;
 import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningFloatUnsafe;
 import net.imglib2.img.cell.Cell;
 import net.imglib2.img.cell.LazyCellImg;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Fraction;
+import net.imglib2.util.Pair;
+import net.imglib2.view.Views;
 
 public class Helpers
 {
@@ -59,6 +64,12 @@ public class Helpers
 	public static < A > VolatileCachedCellImg.Get< A > getFromUncheckedVolatileCache( final UncheckedVolatileCache< Long, A > cache )
 	{
 		return ( index, hints ) -> cache.get( index, hints );
+	}
+
+	public static < T extends Type< T > > void burnIn( final RandomAccessible< T > source, final RandomAccessibleInterval< T > target )
+	{
+		for ( final Pair< T, T > p : Views.interval( Views.pair( source, target ), target ) )
+			p.getB().set( p.getA() );
 	}
 
 }
