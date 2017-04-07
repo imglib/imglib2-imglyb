@@ -189,31 +189,44 @@ if __name__ == "__main__":
 
 	img = LazyCellImg( grid, cast( 'net.imglib2.type.NativeType', ttype.copy() ), util.Helpers.getFromUncheckedCache( cboard_cache.unchecked() ) )
 
+	maxNumLevels = 1;
+	numFetcherThreads = 7;
+	queue = BlockingFetchQueues( maxNumLevels );
+	FetcherThreads( queue, numFetcherThreads );
+
 	# proc = LambdaProcessor( lambda interval : fill_with_random( interval ) )
 	vigra_proc_functor = VigraProcessingFunctor(
 		source            = util.Views.extendBorder( img ),
 		margin            = (3, 3, 3),
 		store_constructor = DirtyVolatileOwningFloatUnsafe,
 		functor           = vigra.filters.gaussianGradientMagnitude,
-		**{ 'sigma' : 3.0 } 
+		**{ 'sigma' : 3.0 }
 		)
 	proc = LambdaProcessor( vigra_proc_functor )
 	processing_loader = ProcessingLoader( proc, grid )
-
-	maxNumLevels = 1;
-	numFetcherThreads = 7;
-	queue = BlockingFetchQueues( maxNumLevels );
-	FetcherThreads( queue, numFetcherThreads );
 	
 	proc_cache = create_caches( ttype.copy(), vtype.copy(), DiskCellCache, "processed-", grid, processing_loader, PrimitiveType.FLOAT, AccessFlags.VOLATILE )
 	proc_img, proc_v_img = create_img_and_volatile_image( ttype.copy(), vtype.copy(), grid, proc_cache, queue )
+
+	vigra_proc_functor2 = VigraProcessingFunctor(
+		source            = util.Views.extendBorder( proc_img ),
+		margin            = (3, 3, 3),
+		store_constructor = DirtyVolatileOwningFloatUnsafe,
+		functor           = vigra.filters.gaussianGradientMagnitude,
+		**{ 'sigma' : 3.0 }
+		)
+	proc2 = LambdaProcessor( vigra_proc_functor2 )
+	processing_loader2 = ProcessingLoader( proc2, grid )
+
+	proc_cache2 = create_caches( ttype.copy(), vtype.copy(), DiskCellCache, "processed-", grid, processing_loader2, PrimitiveType.FLOAT, AccessFlags.VOLATILE )
+	proc_img2, proc_v_img2 = create_img_and_volatile_image( ttype.copy(), vtype.copy(), grid, proc_cache2, queue )
 	
 
 	bdv = util.BdvFunctions.show( img, "Cached" );
 	bdv.getBdvHandle().getViewerPanel().setDisplayMode( DisplayMode.SINGLE );
 	util.BdvFunctions.show( proc_v_img, "processed", util.BdvOptions.options().addTo( bdv ) )
+	util.BdvFunctions.show( proc_v_img2, "processed2", util.BdvOptions.options().addTo( bdv ) )
 	print( util.Helpers.className( proc_v_img.randomAccess().get() ) )
-
 
 	# Keep Python running until user closes Bdv window
 	vp = bdv.getBdvHandle().getViewerPanel()
