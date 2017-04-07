@@ -5,6 +5,7 @@ from jnius import autoclass, cast, PythonJavaClass, java_method
 import ctypes
 import numpy as np
 import time
+import vigra
 
 ArrayImgs = autoclass( 'net.imglib2.img.array.ArrayImgs' )
 Intervals = autoclass( 'net.imglib2.util.Intervals' )
@@ -30,7 +31,7 @@ AccessIo = autoclass('net.imglib2.cache.img.AccessIo')
 PrimitiveType = autoclass('net.imglib2.cache.img.PrimitiveType')
 AccessFlags = autoclass('net.imglib2.cache.img.AccessFlags')
 ProcessingLoader = autoclass('net.imglib2.cache.ProcessingLoader')
-VolatileOwningFloatUnsafe = autoclass('net.imglib2.cache.VolatileOwningFloatUnsafe')
+DirtyVolatileOwningFloatUnsafe = autoclass('net.imglib2.cache.DirtyVolatileOwningFloatUnsafe')
 ReferenceGuardingFloatUnsafe = autoclass('net.imglib2.cache.ReferenceGuardingFloatUnsafe')
 CreateInvalidVolatileCell = autoclass('bdv.img.cache.CreateInvalidVolatileCell')
 WeakRefVolatileCache = autoclass('net.imglib2.cache.ref.WeakRefVolatileCache')
@@ -113,14 +114,52 @@ class ImgLibReferenceGuard( np.ndarray ):
 			return
 		self.rai = obj.rai
 	
+class VigraProcessingFunctor():
+	def __init__( self, source, margin, store_constructor, functor, **functor_kwargs ):
+		self.source = source
+		self.margin = margin
+		self.store_constructor = store_constructor
+		self.functor = functor
+		self.functor_kwargs = functor_kwargs
+		print( "constructor: ", functor_kwargs, self.functor_kwargs )
 
+	def __call__( self, interval ):
+		n = Intervals.numElements( interval )
+		n_dim = interval.numDimensions()
+		store = DirtyVolatileOwningFloatUnsafe( n, True ) #self.store_constrctor( n, True )
+		target = ArrayImgs.floats( store, *Intervals.dimensionsAsLongArray( interval ) )
+		expanded = Intervals.expand( interval, *self.margin )
+		source_store = OwningFloatUnsafe( Intervals.numElements( expanded ) )
+		source = ArrayImgs.floats( source_store, *Intervals.dimensionsAsLongArray( expanded ) )
+		util.Helpers.burnIn( self.source, util.Views.translate( source, *Intervals.minAsLongArray( expanded ) ) )
+		source_np = ImgLibReferenceGuard( source )
+		target_np = ImgLibReferenceGuard( target )
+		print( 11 )
+
+		roi_min = tuple( m for m in self.margin )
+		print( 12 )
+		roi_max = tuple( source_np.shape[ d ] - self.margin[ d ] for d in range( n_dim ) )
+		print( 13, roi_min, roi_max, target_np.shape )
+		print( 13, roi_min, roi_max )
+
+		# print( self.functor_kwargs )
+		# print( source_np, target_np, self.functor_kwargs )
+		# print( source.randomAccess().get().toString() )
+		# print("Before functor", self.source, source, target )
+		self.functor( source_np, out=target_np, roi=( roi_min, roi_max ), **self.functor_kwargs )
+		print("After functor")
+
+		print( store )
+		return cast( util.Helpers.className( store ), store )
 	
 def fill_with_random( interval ):#, make_store, make_img ):
 	n = Intervals.numElements( interval )
-	store = VolatileOwningFloatUnsafe( n, True )# make_store( n, True )
+	store = DirtyVolatileOwningFloatUnsafe( n, True )# make_store( n, True )
 	dims = Intervals.dimensionsAsLongArray( interval )
 	img = ArrayImgs.floats( store, *dims ) #make_img( store, )
 	np_img = ImgLibReferenceGuard( img )
+	for i in range( 10 ):
+		np_img[...] = np.random.randint( 2**16, size=np_img.shape )
 	# print( "Correct?", np_img.shape, np_img.dtype, np_img.min(), np_img.max(), store_cast.getValue( 0 ), store_cast.getValue( 1 ), store_cast.getValue( 2 ) )
 	# if this cast doesn't happen class information gets lost for some reason
 	return cast( util.Helpers.className( store ), store )
@@ -148,11 +187,7 @@ def create_img_and_volatile_image( ttype, vtype, grid, cache, queue ):
 	get_get = util.Helpers.getFromUncheckedVolatileCache( volatileCache.unchecked() )
 	print( "get_get", get_get )
 	v_img = VolatileCachedCellImg( grid, vtype, hints, get_get )
-	return img, v_img
-
-
-	
-
+	return img, v_img,  # cast( 'net.imglib2.RandomAccessibleInterval', v_img ) 
 
 if __name__ == "__main__":
 	cellDimensions = ( 64, 64, 64 )
@@ -166,7 +201,15 @@ if __name__ == "__main__":
 
 	img = LazyCellImg( grid, cast( 'net.imglib2.type.NativeType', ttype.copy() ), util.Helpers.getFromUncheckedCache( cboard_cache.unchecked() ) )
 
-	proc = LambdaProcessor( lambda interval : fill_with_random( interval ) )
+	# proc = LambdaProcessor( lambda interval : fill_with_random( interval ) )
+	vigra_proc_functor = VigraProcessingFunctor(
+		source            = util.Views.extendBorder( img ),
+		margin            = (3, 3, 3),
+		store_constructor = DirtyVolatileOwningFloatUnsafe,
+		functor           = vigra.filters.gaussianGradientMagnitude,
+		**{ 'sigma' : 3.0 } 
+		)
+	proc = LambdaProcessor( vigra_proc_functor )
 	processing_loader = ProcessingLoader( proc, grid )
 
 	maxNumLevels = 1;
@@ -180,7 +223,8 @@ if __name__ == "__main__":
 
 	bdv = util.BdvFunctions.show( img, "Cached" );
 	bdv.getBdvHandle().getViewerPanel().setDisplayMode( DisplayMode.SINGLE );
-	util.BdvFunctions.show( proc_img, "processed", util.BdvOptions.options().addTo( bdv ) )
+	util.BdvFunctions.show( proc_v_img, "processed", util.BdvOptions.options().addTo( bdv ) )
+	print( util.Helpers.className( proc_v_img.randomAccess().get() ) )
 
 
 	# Keep Python running until user closes Bdv window
@@ -191,16 +235,3 @@ if __name__ == "__main__":
 	while check.isOpen():
 		time.sleep( 0.1 )
 
-
-	# final Pair< Img< UnsignedShortType >, Img< VolatileUnsignedShortType > > gauss1 = createGauss( Views.extendBorder( img ), 5, grid, queue );
-	# final Pair< Img< UnsignedShortType >, Img< VolatileUnsignedShortType > > gauss2 = createGauss( Views.extendBorder( img ), 4, grid, queue );
-
-	# BdvFunctions.show( gauss1.getB(), "Gauss 1", BdvOptions.options().addTo( bdv ) );
-	# BdvFunctions.show( gauss2.getB(), "Gauss 2", BdvOptions.options().addTo( bdv ) );
-
-	# final Pair< Img< ShortType >, Img< VolatileShortType > > diff = createDifference(
-	# 	Views.extendBorder( gauss1.getA() ),
-	# 	Views.extendBorder( gauss2.getA() ),
-	# 	grid,
-	# 	queue );
-	# BdvFunctions.show( diff.getB(), "Diff", BdvOptions.options().addTo( bdv ) );
