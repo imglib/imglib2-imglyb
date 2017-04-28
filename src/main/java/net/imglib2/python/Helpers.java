@@ -1,5 +1,7 @@
 package net.imglib2.python;
 
+import java.awt.Menu;
+
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
 
@@ -68,6 +70,27 @@ public class Helpers
 	{
 		for ( final Pair< T, T > p : Views.interval( Views.pair( source, target ), target ) )
 			p.getB().set( p.getA() );
+	}
+
+	public static < T extends Type< T > & Comparable< T > > T min( final RandomAccessibleInterval< T > source, final T min )
+	{
+		for ( final T s : Views.flatIterable( source ) )
+			if ( s.compareTo( min ) < 0 )
+				min.set( s );
+		return min;
+	}
+
+	public static < T extends Type< T > & Comparable< T > > T max( final RandomAccessibleInterval< T > source, final T max )
+	{
+		for ( final T s : Views.flatIterable( source ) )
+			if ( s.compareTo( max ) > 0 )
+				max.set( s );
+		return max;
+	}
+
+	public static void main( final String[] args )
+	{
+		final Menu menu = new Menu( "123" );
 	}
 
 }

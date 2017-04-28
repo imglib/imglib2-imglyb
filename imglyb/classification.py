@@ -81,10 +81,13 @@ class VigraClassification( PythonJavaClass ):
 
 	@java_method( '(Lnet/imglib2/img/array/ArrayImg;[I)V' )
 	def train( self, features, labels ):
+		print( "Triggered training!", len( labels ) )
 		features_np = ImgLibReferenceGuard( features )
 		labels_np = np.array( labels ).reshape( len( labels ), 1 ).astype( np.uint32 )
 		try:
+			print( "Call to RF training" )
 			self.classifier.learnRF( features_np, labels_np, **self.train_kwargs )
+			print( "Finished training!" )
 		except Exception as e:
 			print( e )
 			raise e
@@ -94,7 +97,7 @@ class VigraClassification( PythonJavaClass ):
 		features_np = ImgLibReferenceGuard( features )
 		labels_np = ImgLibReferenceGuard( labels ).reshape( Intervals.numElements( labels ), 1 )
 		try:
-			self.classifier.predictLabels( features_np, out=labels_np, **self.predict_kwargs )
+			output = self.classifier.predictLabels( features_np, out=labels_np, **self.predict_kwargs )
 		except Exception as e:
 			print( e )
 			raise e
@@ -178,7 +181,7 @@ class VigraProcessingFunctor():
 		roi_max = tuple( source_np.shape[ d ] - self.margin[ d ] for d in range( n_dim ) )
 
 		try:
-			self.functor( source_np, out=target_np, roi=( roi_min, roi_max ), **self.functor_kwargs )
+			target_np = self.functor( source_np, out=target_np, roi=( roi_min, roi_max ), **self.functor_kwargs )
 		except Exception as e:
 			print( e )
 			raise( e )
@@ -226,7 +229,7 @@ def create_img_and_volatile_image( ttype, vtype, grid, cache, queue ):
 	return img, v_img,  # cast( 'net.imglib2.RandomAccessibleInterval', v_img ) 
 
 if __name__ == "__main__":
-	path = '/home/phil/Downloads/epfl-em/training-reduced.tif'
+	path = '/home/hanslovskyp/Downloads/epfl-em/training.tif'
 	img_np = np.array( vigra.impex.readVolume( path ).squeeze().transpose(), copy=True )
 	# vigra.impex.writeVolume( img_np[...,:10], '/home/phil/Downloads/epfl-em/training-reduced.tif', '' )
 	img = util.to_imglib( img_np )
@@ -246,7 +249,7 @@ if __name__ == "__main__":
 	# img = LazyCellImg( grid, cast( 'net.imglib2.type.NativeType', ttype.copy() ), util.Helpers.getFromUncheckedCache( cboard_cache.unchecked() ) )
 
 	maxNumLevels = 1;
-	numFetcherThreads = 3;
+	numFetcherThreads = 47;
 	queue = BlockingFetchQueues( maxNumLevels );
 	FetcherThreads( queue, numFetcherThreads );
 
@@ -305,7 +308,7 @@ if __name__ == "__main__":
 	vigra_classification = VigraClassification( rf )
 	classifier = FunctorClassifier( feats.dimension( 3 ), vigra_classification )
 
-	bdv = PaintLabelsAndTrain.trainClassifier( img, feats, vfeats, classifier, 2, grid, queue )
+	bdv = PaintLabelsAndTrain.trainClassifier( img, feats, vfeats, classifier, 2, grid, queue, False )
 
 	# Keep Python running until user closes Bdv window
 	vp = bdv.getBdvHandle().getViewerPanel()
