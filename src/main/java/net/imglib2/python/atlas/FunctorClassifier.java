@@ -85,7 +85,21 @@ implements Classifier< Composite< FloatType >, RandomAccessibleInterval< FloatTy
 			for ( int d = 0; d < numFeatures; ++d )
 				cursor.next().set( comp.get( d ) );
 		}
-			impl.train( features, labels );
+		impl.train( features, labels );
+
+	}
+
+	@Override
+	public void saveClassifier( final String path, final boolean overwrite ) throws Exception
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void loadClassifier( final String path ) throws Exception
+	{
+		// TODO Auto-generated method stub
 
 	}
 

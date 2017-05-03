@@ -88,6 +88,11 @@ public class Helpers
 		return max;
 	}
 
+	public static < T > Class< ? > getClass( final T o )
+	{
+		return o.getClass();
+	}
+
 	public static void main( final String[] args )
 	{
 		final Menu menu = new Menu( "123" );
