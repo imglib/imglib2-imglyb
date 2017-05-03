@@ -249,7 +249,7 @@ if __name__ == "__main__":
 	# img = LazyCellImg( grid, cast( 'net.imglib2.type.NativeType', ttype.copy() ), util.Helpers.getFromUncheckedCache( cboard_cache.unchecked() ) )
 
 	maxNumLevels = 1;
-	numFetcherThreads = 47;
+	numFetcherThreads = 2;
 	queue = BlockingFetchQueues( maxNumLevels );
 	FetcherThreads( queue, numFetcherThreads );
 
