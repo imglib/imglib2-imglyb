@@ -6,11 +6,11 @@ import org.scijava.command.CommandInfo;
 public class PythonCommandInfo extends CommandInfo
 {
 
-	private final Command command;
+	private final RunnableCommand command;
 
-	public PythonCommandInfo( final String name, final Command command )
+	public PythonCommandInfo( final RunnableCommand command )
 	{
-		super( name );
+		super( RunnableCommand.class );
 		this.command = command;
 	}
 
@@ -18,6 +18,25 @@ public class PythonCommandInfo extends CommandInfo
 	public Command createInstance()
 	{
 		return command;
+	}
+
+	public static class RunnableCommand implements Command
+	{
+
+		private final Runnable r;
+
+		public RunnableCommand( final Runnable r )
+		{
+			super();
+			this.r = r;
+		}
+
+		@Override
+		public void run()
+		{
+			r.run();
+		}
+
 	}
 
 
