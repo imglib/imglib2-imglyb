@@ -1,12 +1,5 @@
 package net.imglib2.python;
 
-import org.scijava.display.Display;
-import org.scijava.display.DisplayService;
-
-import io.scif.img.ImgIOException;
-import io.scif.img.ImgOpener;
-import io.scif.img.SCIFIOImgPlus;
-import net.imagej.ImageJ;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
@@ -145,21 +138,6 @@ public class ArrayImgWithUnsafeStoreFactory< T extends NativeType< T > > extends
 		if ( type instanceof NativeType )
 			return new ArrayImgWithUnsafeStoreFactory();
 		throw new IncompatibleTypeException( type, "Does not implement NativeType!" );
-	}
-
-	public static void main( final String[] args ) throws ImgIOException
-	{
-		final UnsignedByteType t = new UnsignedByteType();
-		final ArrayImgWithUnsafeStoreFactory< UnsignedByteType > fac = new ArrayImgWithUnsafeStoreFactory<>();
-		final String url = "http://www.nerdtests.com/mq/testimages/167138_4f49b66c0cb4a87cc906.jpg";
-		final ImageJ ij = new ImageJ();
-		ij.launch();
-		final ImgOpener opener = new ImgOpener( ij.getContext() );
-		final DisplayService display = ij.display();
-		final SCIFIOImgPlus< ? > img_unsafe = opener.openImgs( url, fac ).get( 0 );
-		final SCIFIOImgPlus< ? > img = opener.openImgs( url ).get( 0 );
-		final Display< ? > d_unsafe = display.createDisplay( "unsafe", img_unsafe );
-		final Display< ? > d = display.createDisplay( "safe", img );
 	}
 
 }
