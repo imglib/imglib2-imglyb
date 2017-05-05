@@ -20,15 +20,33 @@ class Bunch( object ):
 		self.__dict__.update( kwds )
 
 dtype_selector = {
-	'FloatType' : np.dtype( 'float32' )
+	'FloatType' : np.dtype( 'float32' ),
+	'DoubleType' : np.dtype( 'float64' ),
+	'ByteType' : np.dtype( 'int8' ),
+	'UnsignedByteType' : np.dtype( 'uint8' ),
+	'ShortType' : np.dtype( 'int16' ),
+	'UnsignedShortType' : np.dtype( 'uint16' ),
+	'IntType' : np.dtype( 'int32' ),
+	'UnsignedIntType' : np.dtype( 'uint32' ),
+	'LongType' : np.dtype( 'int64' ),
+	'UnsignedLongType' : np.dtype( 'uint64' ),
 }
 
 getters = {
-	'FloatType' : util.Getters.getFloat
+	'FloatType' : util.Getters.getFloat,
 }
 
 ctype_conversions_imglib = {
-	'FloatType' : ctypes.c_float
+	'FloatType' : ctypes.c_float,
+	'DoubleType' : ctypes.c_double,
+	'ByteType' : ctypes.c_int8,
+	'UnsignedByteType' : ctypes.c_uint8,
+	'ShortType' : ctypes.c_int16,
+	'UnsignedShortType' : ctypes.c_uint16,
+	'IntType' : ctypes.c_int32,
+	'UnsignedIntType' : ctypes.c_uint32,
+	'LongType' : ctypes.c_int64,
+	'UnsignedLongType' : ctypes.c_uint64
 }
 
 
