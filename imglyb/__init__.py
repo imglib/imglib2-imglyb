@@ -42,8 +42,6 @@ def _init_jvm_options():
 	if JVM_OPTIONS_STR in os.environ:
 		jnius_config.add_options( *os.environ[ JVM_OPTIONS_STR ].split(' ') )
 
-	print ("OPTIONS!", jnius_config.get_options() )
-
 	return jnius_config
 
 config = _init_jvm_options()
