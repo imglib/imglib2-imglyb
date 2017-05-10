@@ -58,7 +58,6 @@ def get_address( rai ):
 		access_type = util.Helpers.className( access )
 
 		if 'basictypeaccess.array' in access_type:
-			print( "ARRAY? ", Arrays.toString( cast( access_type, access ).getCurrentStorageArray() ) )
 			return util.Helpers.getFirstArrayElementAddress( cast( access_type, access ).getCurrentStorageArray() )
 		elif 'basictypelongaccess.unsafe' in access_type:
 			return cast( access_type, access ).getAddress()
@@ -76,15 +75,12 @@ class ImgLibReferenceGuard( np.ndarray ):
 
 		shape = tuple( Intervals.dimensionsAsLongArray( rai ) )[::-1]
 		dtype = dtype_selector[ imglib_type ]
-		print( 'address:', address, type(address), np.prod(shape), type(int(np.prod(shape))))
 		pointer = ctypes.cast( address, ctypes.POINTER( ctype_conversions_imglib[ imglib_type ] ) )
-		print( "Contents? ", pointer.contents, UnsafeUtil.UNSAFE.getFloat( address ) )
 		order = 'C'
 
 		obj = np.ndarray.__new__( cls, buffer=np.ctypeslib.as_array( pointer, shape=shape ), shape=shape, dtype=dtype )
 		obj.setflags( write = True )
 		obj.rai = rai
-		print( "ADDRESS MISMATCH? ", address, obj.ctypes.data )
 		return obj
 
 	def __array_finalize__( self, obj ):
@@ -98,8 +94,6 @@ class ImgLibNumpyArray( np.ndarray ):
 	def __new__( cls, rai ):
 
 		class_name = util.Helpers.className( rai )
-
-		print( "CLASS NAME {}".format( class_name ) )
 
 		if 'ReferenceGuardingRandomAccessibleInterval' in class_name:
 			return cast( class_name, rai ).getReferenceHolder().args[ 0 ]
@@ -120,13 +114,10 @@ class ImgLibNumpyArray( np.ndarray ):
 			obj = np.ndarray.__new__( cls, shape=shape, dtype=dtype, buffer=None, offset=0, strides=None, order=None )
 			setattr( obj, 'rai', rai )
 			setattr( obj, 'imglib_type', imglib_type )
-			print( "WATTTTZ? {} {}".format(  type(obj), cls ) )
-			print()
 			return obj
 
 
 	def __array_finalize__( self, obj ):
-		print( "ARRAY FINALIZE! {} {} {}".format( obj, type( self ), type( obj ) ) )
 		if obj is None:
 			return
 
@@ -136,8 +127,6 @@ class ImgLibNumpyArray( np.ndarray ):
 			self.dtype = obj.dtype # getattr( obj, 'dtype', None )
 			self.imglib_type = obj.imglib_type
 			c = util.Views.flatIterable( self.rai ).cursor()
-			while c.hasNext():
-				print( "ARRAY CONTENTS", c.next() )
 
 		else:
 			nd.array.__array_finalize__( self, obj )
@@ -147,7 +136,6 @@ class ImgLibNumpyArray( np.ndarray ):
 		return ret_val
 
 	def _getitem_impl( self, obj ):
-		# print( "THIS IS OBJ!", obj, self.shape, type( self ), Intervals.minAsLongArray( self.rai ) )
 		slicing = [ slice( None ) for d in range( self.rai.numDimensions() ) ]
 
 		if obj is Ellipsis:
@@ -158,7 +146,6 @@ class ImgLibNumpyArray( np.ndarray ):
 			if np.all( [ isinstance( x, ( int, slice ) ) or x is Ellipsis for x in obj ] ):
 				ellipsis_position = np.where( [ x is Ellipsis for x in obj ] )[ 0 ]
 				ellipsis_position = len( slicing ) if ellipsis_position.size == 0 else ellipsis_position[ 0 ]
-				# print ( 'ell pos', ellipsis_position )
 
 				for idx in range( 0, ellipsis_position ):
 					current = obj[ idx ]
@@ -167,13 +154,11 @@ class ImgLibNumpyArray( np.ndarray ):
 					slicing[ idx ] = current
 
 				for idx in range( 1, len( obj ) - ellipsis_position ):
-					# print( 'idx', idx)
 					current = obj[ len( obj ) - idx ]
 					if isinstance( current, int ) and current < 0:
 						current = self.shape[ len( obj ) - idx ] + current
 					slicing[ len( slicing ) - idx ] = current
 
-				# print( "SLICING: ", slicing )
 
 
 			else:
@@ -181,7 +166,6 @@ class ImgLibNumpyArray( np.ndarray ):
 
 		elif isinstance( obj, int ):
 			slicing[ 0 ] = shape[0] + obj if obj < 0 else obj
-			# print ("SINGLE INT SLICING", slicing)
 
 		else:
 			raise ValueError( "Illegal argument for slicing: {}. Use int, slice, and Ellipsis only!".format( obj ) )
@@ -191,7 +175,6 @@ class ImgLibNumpyArray( np.ndarray ):
 			]
 
 		if ( np.all( [ isinstance( x, int ) for x in reverse_slicing ] ) ):
-			# print( "ALL ARE INT", reverse_slicing, obj )
 			access = self.rai.randomAccess()
 			access.setPosition( slicing )
 			val = access.get()
@@ -208,12 +191,9 @@ class ImgLibNumpyArray( np.ndarray ):
 			interval_dim = [ sl.stop for sl in intervalers ]  # exclusive
 			result = util.Views.offsetInterval( result, interval_min, interval_dim )
 
-			# print( "HS and INTVALS", obj, reverse_slicing, hyperslicers, intervalers, Intervals.minAsLongArray( result ) )
-
 			return ImgLibNumpyArray( result )
 
 	def reshape( self, shape ):
-		print( "RESHAPOING!" )
 		return ImgLibNumpyArray( ReshapeView( self.rai, *shape ) )
 
 
