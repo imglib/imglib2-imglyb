@@ -5,6 +5,9 @@ from jnius import autoclass, cast
 import ctypes
 import numpy as np
 
+
+Intervals = autoclass( 'net.imglib2.util.Intervals' )
+
 dtype_selector = {
 	'FloatType' : np.dtype( 'float32' ),
 	'DoubleType' : np.dtype( 'float64' ),
@@ -78,7 +81,6 @@ if __name__ == "__main__":
 
 
 	ArrayImgs = autoclass( 'net.imglib2.img.array.ArrayImgs' )
-	Intervals = autoclass( 'net.imglib2.util.Intervals' )
 	UnsafeUtil = autoclass( 'net.imglib2.img.basictypelongaccess.unsafe.UnsafeUtil' )
 	Arrays = autoclass( 'java.util.Arrays' )
 	OwningFloatUnsafe = autoclass( 'net.imglib2.img.basictypelongaccess.unsafe.owning.OwningFloatUnsafe' )
