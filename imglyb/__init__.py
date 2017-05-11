@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-__all__ = ( to_imglib, to_imglib_argb )
+__all__ = ( 'to_imglib', 'to_imglib_argb', 'to_numpy' )
 
 def _init_jvm_options():
 
@@ -49,4 +49,5 @@ config = _init_jvm_options()
 
 from .util import \
      to_imglib, \
-     to_imglib_argb
+     to_imglib_argb, \
+     to_numpy
