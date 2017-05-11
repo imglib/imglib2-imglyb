@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-__all__ = ()
+__all__ = ( to_imglib, to_imglib_argb )
 
 def _init_jvm_options():
 
@@ -45,3 +45,8 @@ def _init_jvm_options():
 	return jnius_config
 
 config = _init_jvm_options()
+
+
+from .util import \
+     to_imglib, \
+     to_imglib_argb
