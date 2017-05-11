@@ -229,7 +229,7 @@ def create_img_and_volatile_image( ttype, vtype, grid, cache, queue ):
 	return img, v_img,  # cast( 'net.imglib2.RandomAccessibleInterval', v_img ) 
 
 if __name__ == "__main__":
-	path = '/home/hanslovskyp/Downloads/epfl-em/training.tif'
+	path = '/home/phil/Downloads/epfl-em/training.tif'
 	img_np = np.array( vigra.impex.readVolume( path ).squeeze().transpose(), copy=True )
 	# vigra.impex.writeVolume( img_np[...,:10], '/home/phil/Downloads/epfl-em/training-reduced.tif', '' )
 	img = util.to_imglib( img_np )
@@ -249,7 +249,7 @@ if __name__ == "__main__":
 	# img = LazyCellImg( grid, cast( 'net.imglib2.type.NativeType', ttype.copy() ), util.Helpers.getFromUncheckedCache( cboard_cache.unchecked() ) )
 
 	maxNumLevels = 1;
-	numFetcherThreads = 47;
+	numFetcherThreads = 2;
 	queue = BlockingFetchQueues( maxNumLevels );
 	FetcherThreads( queue, numFetcherThreads );
 
