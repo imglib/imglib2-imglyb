@@ -20,7 +20,6 @@ __all__ = (
 Random = autoclass( 'java.util.Random' )
 
 # imglib
-Getters = autoclass('net.imglib2.python.Getters')
 Helpers = autoclass('net.imglib2.python.Helpers')
 NumpyToImgLibConversions = autoclass('net.imglib2.python.NumpyToImgLibConversions')
 NumpyToImgLibConversionsWithStride = autoclass('net.imglib2.python.NumpyToImgLibConversionsWithStride')
