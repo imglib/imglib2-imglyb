@@ -8,6 +8,8 @@ from jnius import autoclass, PythonJavaClass, java_method
 
 import numpy as np
 
+from .imglib_ndarray import ImgLibReferenceGuard
+
 __all__ = (
 	'to_imglib',
 	'to_imglib_argb',
@@ -18,6 +20,7 @@ __all__ = (
 Random = autoclass( 'java.util.Random' )
 
 # imglib
+Helpers = autoclass('net.imglib2.python.Helpers')
 NumpyToImgLibConversions = autoclass('net.imglib2.python.NumpyToImgLibConversions')
 NumpyToImgLibConversionsWithStride = autoclass('net.imglib2.python.NumpyToImgLibConversionsWithStride')
 Views = autoclass('net.imglib2.view.Views')
@@ -95,6 +98,9 @@ def _to_imglib_argb( source ):
 	else:
 		stride = np.array( source.strides[::-1] ) / source.itemsize
 		return NumpyToImgLibConversionsWithStride.toARGB( address, tuple( stride ), source.shape[::-1] )
+
+def to_numpy( source ):
+	return ImgLibReferenceGuard( source )
 
 def options2D():
 	return BdvOptions.options().is2D()
