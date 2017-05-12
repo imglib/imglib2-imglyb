@@ -29,17 +29,21 @@ If this does not work for you, please follow the build instructions below.
 
 ### Build
 ```bash
+# get PyJNIus
+https://github.com/kivy/pyjnius
+cd pyjnius
+make # creates build/pyjnius.jar
+make tests
+python setup.py install
+```
+
+```bash
 # get imglib2-unsafe-0.0.1-SNAPSHOT
 git clone https://github.com/imglib/imglib2-unsafe
 cd imglib2-unsafe
 mvn clean install
 ```
-```bash
-# get imglib2-algorithm-0.6.4-SNAPSHOT.jar
-git clone https://github.com/imglib/imglib2-algorithm
-cd imglib2-algorithm
-mvn install
-```
+
 ```bash
 cd /path/to/imglib2-imglyb
 mvn clean package
