@@ -27,6 +27,7 @@ If this does not work for you, please follow the build instructions below.
  * [imglib2-unsafe](https://github.com/imglib/imglib2-unsafe)
  * Currently: `imglib2-unsafe-0.0.1-SNAPSHOT.jar` in local maven repository (see instructions below)
  * pyjnius.jar (see instructions below)
+ * Cython
 
 ### Build
 ```bash
