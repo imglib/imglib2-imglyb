@@ -33,15 +33,27 @@ If this does not work for you, please follow the build instructions below.
  * Cython
 
 ### Build
+Clone (or download) the PyJNIus repository:
 ```bash
 # get PyJNIus
-https://github.com/kivy/pyjnius
+git clone https://github.com/kivy/pyjnius
 cd pyjnius
+```
+In order to build `pyjnius.jar` and install the pyjnius python package, run on Linux or OSX:
+```bash
 make # creates build/pyjnius.jar
-make tests
+export JAVA_HOME=/path/to/jdk  # optional
+make tests # optional
+python setup.py install
+```
+On Windows:
+```bash
+ant all
+python setup.py build_ext --inplace -f
 python setup.py install
 ```
 
+All other instructions should work independent of the operating system.
 ```bash
 # get imglib2-unsafe-0.0.1-SNAPSHOT
 git clone https://github.com/imglib/imglib2-unsafe
