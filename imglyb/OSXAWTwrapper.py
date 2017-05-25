@@ -50,7 +50,7 @@ class AppDelegate (NSObject):
 
     def runjava_(self, arg):
         runAwtStuff()
-        # need to terminate explicitly, or it'll hang when
+        # we need to terminate explicitly, or it'll hang when
         #   the wrapped code exits
         NSApp().terminate_(self)
 
@@ -62,7 +62,12 @@ def main():
     app = NSApplication.sharedApplication()
     delegate = AppDelegate.alloc().init()
     NSApp().setDelegate_(delegate)
+    # this is necessary to have keyboard events sent to the UI;
+    #   basically this call makes the script act like an OS X application,
+    #   with Dock icon and everything
+    NSApp.setActivationPolicy_(NSApplicationActivationPolicyRegular)
     AppHelper.runEventLoop()
 
 if __name__ == '__main__' : 
     main()
+
