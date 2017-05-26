@@ -96,90 +96,14 @@ It is best to follow and extend the [imglyb-examples](https://github.com/hanslov
 ## Known Issues
 ### AWT through PyJNIus on OSX
 
-Currently, AWT, PyJNIus and cocoa do not get along very well
-In general, the cocoa event loop needs to be started before the jvm or awt is loaded (see example below). 
-This requires `PyObjC` which is not available through conda currently. (Thanks to @tpietzsch for figuring out!)
-AWT frames (`JFrame`) are not visible or `BigDataViewer` crashes on user input.
-`BigDataViewer` functionality is thus not available or very limited on OSX.
-This is the working example for debugging and trying to figure out a way to fix the OSX issues:
-```python
-from __future__ import print_function
+AWT, PyJNIus, and Cocoa do not get along perfectly.
 
-def main():
-    import imglyb
-    from imglyb import util
-    from jnius import autoclass, cast
-    import multiprocessing
-    import numpy as np
-    from skimage import io
-    import time
-    import vigra
-    import argparse
-    default_url = 'https://github.com/hanslovsky/imglyb-examples/raw/master/resources/butterfly_small.jpg'
+In general, the Cocoa event loop needs to be started before the JVM is loaded. (Thanks to @tpietzsch for figuring out!) This requires some OS X specific code, written using `PyObjC`, to properly start up and shut down the Cocoa application and start the Java/Python code within it.
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument( '--url', '-u', default=default_url )
+The `OSXAWTwrapper.py` script included in the `imglyb` library provides an example of Cocoa code and can be used to run the `imglyb-examples`. Note that `PyObjC` is a further requirement for this wrapper, and it can be installed from PyPI. 
 
-    args = parser.parse_args()
+Example: to run the "butterfly" script in `imglyb-examples`, one can either use the module name (as if using `python -m`) or the full path to the script. So using the module name, the command looks like this: `python imglyb/OSXAWTwrapper.py imglyb-examples.butterfly`
 
-    RealARGBConverter = autoclass( 'net.imglib2.converter.RealARGBConverter')
-    Converters = autoclass( 'net.imglib2.converter.Converters' )
-    ARGBType = autoclass ( 'net.imglib2.type.numeric.ARGBType' )
-    RealType = autoclass ( 'net.imglib2.type.numeric.real.DoubleType' )
-    DistanceTransform = autoclass( 'net.imglib2.algorithm.morphology.distance.DistanceTransform' )
-    DISTANCE_TYPE = autoclass( 'net.imglib2.algorithm.morphology.distance.DistanceTransform$DISTANCE_TYPE' )
-    Views = autoclass( 'net.imglib2.view.Views' )
-    Executors = autoclass( 'java.util.concurrent.Executors' )
-    t = ARGBType()
+Running `OSXAWTwrapper.py` via `python -m` does not work at this time.
 
-    img = io.imread( args.url )
-    argb = (
-        np.left_shift(img[...,0], np.zeros(img.shape[:-1],dtype=np.uint32) + 16) + \
-        np.left_shift(img[...,1], np.zeros(img.shape[:-1],dtype=np.uint32) + 8)  + \
-        np.left_shift(img[...,2], np.zeros(img.shape[:-1],dtype=np.uint32) + 0) ) \
-        .astype( np.int32 )
-
-    print( "Creating color class..." )
-    Color = autoclass( 'java.awt.Color' )
-    print( Color.BLACK.toString() )
-    JFrame = autoclass( 'javax.swing.JFrame' )
-    print( "Before constructor" )
-    jFrame = JFrame( "Test frame" )
-    print( "After constructor" )
-    jFrame.setPreferredSize( autoclass( 'java.awt.Dimension' )( 400, 300 ) )
-    jFrame.pack()
-    jFrame.setVisible( True )
-    jFrame.show()
-    print( "JFrame should be showing now" )
-
-    print( "Showing first bdv" )
-    bdv = util.BdvFunctions.show( util.to_imglib_argb( argb ), "argb", util.options2D().frameTitle( "b-fly" ) )
-    print( "Showing second bdv" )
-
-if __name__ == "__main__":
-    import objc
-    from Foundation import *
-    from AppKit import *
-    from PyObjCTools import AppHelper
-    import sys
-
-    class AppDelegate( NSObject ):
-
-        def init( self ):
-            self = objc.super( AppDelegate, self ).init()
-            if self is None:
-                return None
-            return self
-
-        def runjava_( self, arg ):
-                        main()
-
-        def applicationDidFinishLaunching_( self, aNotification ):
-            self.performSelectorInBackground_withObject_( "runjava:", 0 )
-
-    app = NSApplication.sharedApplication()
-    delegate = AppDelegate.alloc().init()
-    app.setDelegate_( delegate )
-    AppHelper.runEventLoop()
-    ```
 
