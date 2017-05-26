@@ -6,7 +6,8 @@ keeps Cocoa happy  See https://github.com/kivy/pyjnius/issues/151 for more.
 
 In particular, this wrapper allows one to run the code from imglyb-examples.
 
-Python 3 only!
+Tested in Python 3 only!  Not sure if you'd need to change anything for Python 2
+beyond the print statements.
 
 usage: python OSXAWTwrapper.py [module name | script path] [module or script parameters]
 
@@ -29,7 +30,7 @@ def runAwtStuff():
 
     # user can provide either a module or a path to a script;
     #   either way, need to remove it from sys.argv,
-    #   because the wrapped module or script might parse sys.argv itself:
+    #   because the wrapped module or script might parse sys.argv for its own reasons:
     if len(sys.argv) > 1:
         name = sys.argv[1]
         sys.argv.remove(name)
@@ -41,18 +42,19 @@ def runAwtStuff():
             else:            
                 runpy.run_module(name, run_name="__main__")
         except Exception as e:
-            print("exception occurred while running {}: {}".format(name, e.innermessage))
+            print("exception occurred while running {}: {}".format(name, e))
 
-            # lots can go wrong here, and exceptions can bubble up from
-            #   the Java layer, too; uncomment lines below for to print
+            ## lots can go wrong here, and exceptions can bubble up from
+            #   the Java layer, too; uncomment lines below to print
             #   more information on exception
             # print("exception details: )
             # print("e.args: ", e.args)
-            # print("e.innermessage", e.innermessage)
             # print("e.__class__: ", e.__class__)
             # print("e.stacktrace: ")
             # for line in e.stacktrace:
             #     print("\t", line)
+            ## if Java throws a reflection error, you might want this:
+            ## print("e.innermessage", e.innermessage)
     else:
         print(usage)
         print("no module or script specified")
