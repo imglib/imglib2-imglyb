@@ -21,23 +21,40 @@ from Foundation import *
 from AppKit import *
 from PyObjCTools import AppHelper
 
+usage = "usage: python OSXAWTwrapper.py [module name | script path] [module or script parameters]"
+
 def runAwtStuff():
 
     import runpy
 
-    # user can input either a module or a path to a script;
+    # user can provide either a module or a path to a script;
     #   either way, need to remove it from sys.argv,
-    #   because the module or script might parse it for its own parameters:
+    #   because the wrapped module or script might parse sys.argv itself:
     if len(sys.argv) > 1:
         name = sys.argv[1]
         sys.argv.remove(name)
 
         # whether module or script, need to set the run_name for things to work as expected!
-        if os.path.exists(name):
-            runpy.run_path(name, run_name="__main__")
-        else:            
-            runpy.run_module(name, run_name="__main__")
+        try:
+            if os.path.exists(name):
+                runpy.run_path(name, run_name="__main__")
+            else:            
+                runpy.run_module(name, run_name="__main__")
+        except Exception as e:
+            print("exception occurred while running {}: {}".format(name, e.innermessage))
+
+            # lots can go wrong here, and exceptions can bubble up from
+            #   the Java layer, too; uncomment lines below for to print
+            #   more information on exception
+            # print("exception details: )
+            # print("e.args: ", e.args)
+            # print("e.innermessage", e.innermessage)
+            # print("e.__class__: ", e.__class__)
+            # print("e.stacktrace: ")
+            # for line in e.stacktrace:
+            #     print("\t", line)
     else:
+        print(usage)
         print("no module or script specified")
 
 
