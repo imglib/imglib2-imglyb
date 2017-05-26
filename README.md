@@ -96,13 +96,11 @@ It is best to follow and extend the [imglyb-examples](https://github.com/hanslov
 ## Known Issues
 ### AWT through PyJNIus on OSX
 
-AWT, PyJNIus, and Cocoa do not get along perfectly.
-
-In general, the Cocoa event loop needs to be started before the JVM is loaded. (Thanks to @tpietzsch for figuring out!) This requires some OS X specific code, written using `PyObjC`, to properly start up and shut down the Cocoa application and start the Java/Python code within it.
+AWT, PyJNIus, and Cocoa do not get along perfectly. In general, the Cocoa event loop needs to be started before the JVM is loaded. (Thanks to @tpietzsch for figuring this out!) This requires some OS X specific code, written using `PyObjC`, to properly start up and shut down the Cocoa application and start the Java/Python code within it.
 
 The `OSXAWTwrapper.py` script included in the `imglyb` library provides an example of Cocoa code and can be used to run the `imglyb-examples`. Note that `PyObjC` is a further requirement for this wrapper, and it can be installed from PyPI. 
 
-Example: to run the "butterfly" script in `imglyb-examples`, one can either use the module name (as if using `python -m`) or the full path to the script. So using the module name, the command looks like this: `python imglyb/OSXAWTwrapper.py imglyb-examples.butterfly`
+When running the wrapper, one can either provide the name of the target module (as if using `python -m`) or the full path to the target script. So using the module name, the command to run the "butterfly" script in `imglyb-examples` looks like this: `python imglyb/OSXAWTwrapper.py imglyb-examples.butterfly`
 
 Running `OSXAWTwrapper.py` via `python -m` does not work at this time.
 
