@@ -47,7 +47,7 @@ def runAwtStuff():
             ## lots can go wrong here, and exceptions can bubble up from
             #   the Java layer, too; uncomment lines below to print
             #   more information on exception
-            # print("exception details: )
+            # print("exception details: ")
             # print("e.args: ", e.args)
             # print("e.__class__: ", e.__class__)
             # print("e.stacktrace: ")
