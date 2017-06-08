@@ -47,6 +47,9 @@ def runAwtStuff():
             ## lots can go wrong here, and exceptions can bubble up from
             #   the Java layer, too; uncomment lines below to print
             #   more information on exception
+            # note: different exceptions have different attributes, so you
+            #   might need to adjust the lines below; use dir(e) to see
+            #   what you have available when you are debugging
             # print("exception details: ")
             # print("e.args: ", e.args)
             # print("e.__class__: ", e.__class__)
