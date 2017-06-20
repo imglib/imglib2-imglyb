@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-unsafe</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
 		</dependency>
 		<!-- BigDataViewer dependencies -->
 		<dependency>
