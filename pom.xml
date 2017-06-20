@@ -13,6 +13,73 @@
 
 	<name>ImgLib2 ImgLyb</name>
 	<description>Build fat jar that contains all ImgLib2 and BigDataViewer dependencies that are necessary to access ImgLib2 from Python.</description>
+	<url>https://github.com/hanslovsky/imglib2-imglyb</url>
+	<inceptionYear>2017</inceptionYear>
+	<organization>
+		<name>ImgLib2</name>
+		<url>http://imglib2.net/</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>Simplified BSD License</name>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>hanslovsky</id>
+			<name>Philipp Hanslovsky</name>
+			<url>https://imagej.net/User:Hanslovsky</url>
+			<roles>
+				<role>founder</role>
+				<role>lead</role>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
+	</developers>
+	<contributors>
+		<contributor>
+			<name>Donald Olbris</name>
+			<properties><id>olbris</id></properties>
+		</contributor>
+		<contributor>
+			<name>Curtis Rueden</name>
+			<url>http://imagej.net/User:Rueden</url>
+			<properties><id>ctrueden</id></properties>
+		</contributor>
+	</contributors>
+
+	<mailingLists>
+		<mailingList>
+			<name>ImageJ Forum</name>
+			<archive>http://forum.imagej.net/</archive>
+		</mailingList>
+	</mailingLists>
+
+	<scm>
+		<connection>scm:git:git://github.com/hanslovsky/imglib2-imglyb</connection>
+		<developerConnection>scm:git:git@github.com:hanslovsky/imglib2-imglyb</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/hanslovsky/imglib2-imglyb</url>
+	</scm>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/hanslovsky/imglib2-imglyb/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>None</system>
+	</ciManagement>
+
+	<properties>
+		<package-name>net.imglib2.python</package-name>
+		<license.licenseName>bsd_2</license.licenseName>
+		<license.copyrightOwners>Howard Hughes Medical Institute.</license.copyrightOwners>
+	</properties>
 
 	<repositories>
 		<!-- NB: for SciJava dependencies -->
@@ -51,10 +118,6 @@
             <version>1.0.0-beta-4</version>
 		</dependency>
 	</dependencies>
-
-	<properties>
-        <enforcer.skip>true</enforcer.skip>
-    </properties>
 
 	<build>
 		<plugins>
