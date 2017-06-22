@@ -4,8 +4,6 @@ import ctypes
 
 from collections import defaultdict
 
-from jnius import autoclass, PythonJavaClass, java_method
-
 import numpy as np
 
 from .imglib_ndarray import ImgLibReferenceGuard
@@ -17,20 +15,28 @@ __all__ = (
 )
 
 # java
-Random = autoclass( 'java.util.Random' )
+from java.util import Random
 
 # imglib
-Helpers = autoclass('net.imglib2.python.Helpers')
-NumpyToImgLibConversions = autoclass('net.imglib2.python.NumpyToImgLibConversions')
-NumpyToImgLibConversionsWithStride = autoclass('net.imglib2.python.NumpyToImgLibConversionsWithStride')
-Views = autoclass('net.imglib2.view.Views')
+from net.imglib2.python import Helpers
+from net.imglib2.python import NumpyToImgLibConversions
+from net.imglib2.python import NumpyToImgLibConversionsWithStride
+from net.imglib2.view import Views
 
 # bigdataviewer
-BdvFunctions = autoclass('bdv.util.BdvFunctions')
-BdvOptions = autoclass('bdv.util.BdvOptions')
+from bdv.util import BdvFunctions
+from bdv.util import BdvOptions
 
 # Guard
-ReferenceGuardingRandomAccessibleInterval = autoclass( 'net/imglib2/python/ReferenceGuardingRandomAccessibleInterval' )
+from net.imglib2.python import ReferenceGuardingRandomAccessibleInterval
+
+	
+def get_conversion_method( dtype, dictionary ):
+	for dt, method in dictionary.items():
+		if dtype == dtype:
+			return method
+
+	return None
 
 numpy_dtype_to_conversion_method = {
 	np.dtype( 'complex64' )  : NumpyToImgLibConversions.toComplexFloat,
@@ -65,8 +71,8 @@ numpy_dtype_to_conversion_with_stride_method = {
 def _get_address( source ):
 	return source.ctypes.data
 
-class ReferenceGuard( PythonJavaClass ):
-	__javainterfaces__ = [ 'net/imglib2/python/ReferenceGuardingRandomAccessibleInterval$ReferenceHolder' ]
+from net.imglib2.python import ReferenceGuardingRandomAccessibleInterval
+class ReferenceGuard( ReferenceGuardingRandomAccessibleInterval.ReferenceHolder ):
 	def __init__( self, *args, **kwargs ):
 		super( ReferenceGuard, self ).__init__()
 		self.args = args
@@ -78,13 +84,16 @@ def to_imglib( source ):
 # how to use type hints for python < 3.5?
 def _to_imglib( source ):
 	address = _get_address( source )
-	if not source.dtype in numpy_dtype_to_conversion_method:
+	method = get_conversion_method( source.dtype, numpy_dtype_to_conversion_method )
+	if not method:
 		raise NotImplementedError( "Cannot convert dtype to ImgLib2 type yet: {}".format( source.dtype ) )
 	elif source.flags[ 'CARRAY' ]:
-		return numpy_dtype_to_conversion_method[ source.dtype ]( address, *source.shape[::-1] )
+		print( 'carray!', source.dtype, method)
+		return  method( address, *source.shape[::-1] )
 	else:
 		stride = np.array( source.strides[::-1] ) / source.itemsize
-		return numpy_dtype_to_conversion_with_stride_method[ source.dtype]( address, tuple( stride ), source.shape[::-1] )
+		print( 'strided!' )
+		return  get_conversion_method( source.dtype, numpy_dtype_to_conversion_with_stride_method )( address, tuple( stride ), source.shape[::-1] )
 
 def to_imglib_argb( source ):
 	return ReferenceGuardingRandomAccessibleInterval( _to_imglib_argb( source ), ReferenceGuard( source ) )
@@ -105,36 +114,29 @@ def to_numpy( source ):
 def options2D():
 	return BdvOptions.options().is2D()
 
-
-class GenericOverlayRenderer( PythonJavaClass ):
-	__javainterfaces__ = ['net/imglib2/ui/OverlayRenderer']
+from net.imglib2.ui import OverlayRenderer
+class GenericOverlayRenderer( OverlayRenderer ):
 
 	def __init__( self, draw_overlays=lambda g : None,  set_canvas_size=lambda w, h : None ):
-		super(GenericOverlayRenderer, self).__init__()
 		self.draw_overlays = draw_overlays
 		self.set_canvas_size = set_canvas_size
 
-	@java_method('(Ljava/awt/Graphics;)V')
 	def drawOverlays( self, g ):
 		self.draw_overlays( g )
 
-	@java_method('(II)V')
 	def setCanvasSize( self, width, height ):
 		self.set_canvas_size( width, height )
 
 
-class GenericMouseMotionListener( PythonJavaClass ):
-	__javainterfaces__ = ['java/awt/event/MouseMotionListener']
+from java.awt.event import MouseMotionListener
+class GenericMouseMotionListener( MouseMotionListener ):
 
 	def __init__( self, mouse_dragged = lambda e : None, mouse_moved = lambda e : None ):
-		super(GenericMouseMotionListener, self).__init__()
 		self.mouse_dragged = mouse_dragged
 		self.mouse_moved = mouse_moved
 
-	@java_method('(Ljava/awt/event/MouseEvent;)V')
 	def mouseDragged( self, e ):
 		self.mouse_dragged( e )
 
-	@java_method('(Ljava/awt/event/MouseEvent;)V')
 	def mouseMoved( self, e ):
 		self.mouse_moved( e )

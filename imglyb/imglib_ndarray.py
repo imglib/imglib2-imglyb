@@ -1,12 +1,11 @@
 import imglyb
 from imglyb import util
-from jnius import autoclass, cast
 
 import ctypes
 import numpy as np
 
 
-Intervals = autoclass( 'net.imglib2.util.Intervals' )
+from net.imglib2.util import Intervals
 
 dtype_selector = {
 	'FloatType' : np.dtype( 'float32' ),
@@ -39,11 +38,11 @@ def get_address( rai ):
 	class_name = util.Helpers.classNameSimple( rai )
 	class_name_full = util.Helpers.className( rai )
 	if  class_name in ( 'ArrayImg', 'UnsafeImg' ):
-		access = cast( class_name_full, rai ).update( None )
+		access = rai.update( None )
 		access_type = util.Helpers.className( access )
 
 		if 'basictypelongaccess.unsafe' in access_type:
-			return cast( access_type, access ).getAddress()
+			return access.getAddress()
 		else:
 			raise ValueError( "Excpected unsafe access but got {}".format( access_type ) )
 
@@ -80,12 +79,12 @@ class ImgLibReferenceGuard( np.ndarray ):
 if __name__ == "__main__":
 
 
-	ArrayImgs = autoclass( 'net.imglib2.img.array.ArrayImgs' )
-	UnsafeUtil = autoclass( 'net.imglib2.img.basictypelongaccess.unsafe.UnsafeUtil' )
-	Arrays = autoclass( 'java.util.Arrays' )
-	OwningFloatUnsafe = autoclass( 'net.imglib2.img.basictypelongaccess.unsafe.owning.OwningFloatUnsafe' )
-	Fraction = autoclass( 'net.imglib2.util.Fraction' )
-	LongStream = autoclass('java.util.stream.LongStream')
+	from net.imglib2.img.array import ArrayImgs
+	from net.imglib2.img.basictypelongaccess.unsafe import UnsafeUtil
+	from java.util import Arrays
+	from net.imglib2.img.basictypelongaccess.unsafe.owning import OwningFloatUnsafe
+	from netimglib2.util import Fraction
+	from java.util.stream import LongStream
 
 	shape = ( 2, 3, 4 )
 	n_elements = int( np.prod( shape ) )
