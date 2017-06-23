@@ -80,11 +80,7 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Howard Hughes Medical Institute.</license.copyrightOwners>
 
-		<imglib2.version>4.1.0</imglib2.version>
-		<imglib2-algorithm.version>0.7.0</imglib2-algorithm.version>
 		<imglib2-unsafe.version>0.0.1</imglib2-unsafe.version>
-		<bigdataviewer-core.version>4.0.1</bigdataviewer-core.version>
-		<bigdataviewer-vistools.version>1.0.0-beta-4</bigdataviewer-vistools.version>
 	</properties>
 
 	<repositories>
