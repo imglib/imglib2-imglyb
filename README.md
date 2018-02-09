@@ -15,7 +15,7 @@ If you are interested in using `imglib2-imglyb`, have a look at the [imglyb-exam
 
 ## Installation
 
-If you are running Linux or, with limitations, OSX, you can get `imglib2-imlgyb` from conda:
+`imglib2-imlgyb` is available on conda for Linux, OSX, and Windows:
 ```bash
 conda install -c hanslovsky imglib2-imglyb
 ```
