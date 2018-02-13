@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import sys
+
 __all__ = ( 'to_imglib', 'to_imglib_argb', 'to_numpy' )
 
 def _init_jvm_options():
@@ -47,7 +49,15 @@ def _init_jvm_options():
 config = _init_jvm_options()
 
 
-from .util import \
+if sys.version_info[0] < 3:
+	print("Using python < 3. Upgrade to python 3 recommended")
+	from util import \
      to_imglib, \
-     to_imglib_argb, \
-     to_numpy
+     to_imglib_argb
+else:
+	from .util import \
+     to_imglib, \
+     to_imglib_argb
+
+def to_numpy( source ):
+	return ImgLibReferenceGuard( source )
