@@ -1,5 +1,7 @@
 [![Join the chat at https://gitter.im/imglib2-imglyb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib2-imglyb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+**IMPORTANT NOTE** Currently no working PyJNIus conda package for Windows available. I do need help maintaining the conda packages for operating systems that I am not familiar with or have limited access to, e.g. Windows and maybe OSX. See [#6](https://github.com/hanslovsky/imglib2-imglyb/issues/6) and http://forum.imagej.net/t/imglyb-and-pyjnius-conda-package-maintainers-needed-for-windows-and-osx/11420
+
 # imglib2-imglyb
 
 `imglib2-imglyb` aims at connecting two worlds that have been seperated for too long:
