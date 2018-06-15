@@ -80,7 +80,7 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Howard Hughes Medical Institute.</license.copyrightOwners>
 
-		<imglib2-unsafe.version>0.0.1</imglib2-unsafe.version>
+		<imglib2-unsafe.version>0.2.0</imglib2-unsafe.version>
 	</properties>
 
 	<repositories>
