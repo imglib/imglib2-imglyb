@@ -30,6 +30,11 @@ import net.imglib2.util.Intervals;
 public class ArrayImgWithUnsafeStoreFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
 
+	public ArrayImgWithUnsafeStoreFactory( final T t )
+	{
+		super( t );
+	}
+
 	@SuppressWarnings( "unchecked" )
 	@Override
 	public Img< T > create( final long[] dim, final T type )
@@ -135,9 +140,14 @@ public class ArrayImgWithUnsafeStoreFactory< T extends NativeType< T > > extends
 	@Override
 	public < S > ImgFactory< S > imgFactory( final S type ) throws IncompatibleTypeException
 	{
-		if ( type instanceof NativeType )
-			return new ArrayImgWithUnsafeStoreFactory();
+		if ( type instanceof NativeType ) { return new ArrayImgWithUnsafeStoreFactory( ( NativeType< ? > ) type ); }
 		throw new IncompatibleTypeException( type, "Does not implement NativeType!" );
+	}
+
+	@Override
+	public Img< T > create( final long... dimensions )
+	{
+		return create( dimensions, type() );
 	}
 
 }
