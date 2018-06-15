@@ -30,6 +30,12 @@ import net.imglib2.util.Intervals;
 public class ArrayImgWithUnsafeStoreFactory< T extends NativeType< T > > extends ImgFactory< T >
 {
 
+	@Deprecated
+	public ArrayImgWithUnsafeStoreFactory()
+	{
+		this( null );
+	}
+
 	public ArrayImgWithUnsafeStoreFactory( final T t )
 	{
 		super( t );
