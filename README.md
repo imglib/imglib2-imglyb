@@ -1,5 +1,7 @@
 [![Join the chat at https://gitter.im/imglib2-imglyb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib2-imglyb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+**IMPORTANT NOTE** Currently no working PyJNIus conda package for Windows available. I do need help maintaining the conda packages for operating systems that I am not familiar with or have limited access to, e.g. Windows and maybe OSX. See [#6](https://github.com/hanslovsky/imglib2-imglyb/issues/6) and http://forum.imagej.net/t/imglyb-and-pyjnius-conda-package-maintainers-needed-for-windows-and-osx/11420
+
 # imglib2-imglyb
 
 `imglib2-imglyb` aims at connecting two worlds that have been seperated for too long:
@@ -9,7 +11,7 @@
 `imglib2-imglyb` uses [PyJNIus](https://github.com/kivy/pyjnius) to access `numpy` arrays and expose them to `ImgLib2`.
 This means **shared memory** between `numpy` and `ImgLib2`, i.e. any `ImgLib2` algorithm can run on `numpy` arrays without creating copies of the data!
 For example, Python users can now make use of the [BigDataViewer](https://github.com/bigdataviewer/bigdataviewer-core) to visualize dense volumetric data.
-If you are interested in using `imglib2-imglyb`, have a look at the [imglyb-examples](https://github.com/hanslovsky/imglyb-examples) repository and extend the examples as needed!
+If you are interested in using `imglib2-imglyb`, have a look at the [imglyb-examples](https://github.com/hanslovsky/imglyb-examples) repository and extend the examples as needed! In addition to that, [multiple](https://github.com/hanslovsky/imglyb-learnathon) [notebooks](https://nbviewer.jupyter.org/github/imagej/tutorials/blob/master/notebooks/3_-_Advanced_usage/3_-_ImgLyb_-_ImgLib2_-_with_-_scikit-image.ipynb) demonstrate the general use.
 
 
 
