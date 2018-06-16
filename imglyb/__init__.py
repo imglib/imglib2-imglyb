@@ -51,13 +51,15 @@ config = _init_jvm_options()
 
 if sys.version_info[0] < 3:
 	print("Using python < 3. Upgrade to python 3 recommended")
+	from imglib_ndarray import ImgLibReferenceGuard as _ImgLibReferenceGuard
 	from util import \
      to_imglib, \
      to_imglib_argb
 else:
+	from .imglib_ndarray import ImgLibReferenceGuard as _ImgLibReferenceGuard
 	from .util import \
      to_imglib, \
      to_imglib_argb
 
 def to_numpy( source ):
-	return ImgLibReferenceGuard( source )
+	return _ImgLibReferenceGuard( source )
