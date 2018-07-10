@@ -1,6 +1,9 @@
 [![Join the chat at https://gitter.im/imglib2-imglyb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib2-imglyb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-**IMPORTANT NOTE** The python code has been extracted into a [hanslovsky/imglyb](https://github.com/hanslovsky/imglyb). This repository contains Java code only now.
+**IMPORTANT NOTE** The python code has been extracted into a [hanslovsky/imglyb](https://github.com/hanslovsky/imglyb). This repository contains Java code only now. To install the python package from conda, run
+```bash
+conda install -c hanslovsky imglyb
+```
 
 # imglib2-imglyb
 
