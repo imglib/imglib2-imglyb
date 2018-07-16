@@ -10,7 +10,7 @@
 
 	<groupId>net.imglib</groupId>
 	<artifactId>imglib2-imglyb</artifactId>
-	<version>0.2.1-SNAPSHOT</version>
+	<version>0.2.1</version>
 
 	<name>ImgLib2 ImgLyb</name>
 	<description>Build fat jar that contains all ImgLib2 and BigDataViewer dependencies that are necessary to access ImgLib2 from Python.</description>
