@@ -50,6 +50,48 @@ import net.imglib2.img.basictypeaccess.ShortAccess;
 public interface Accesses
 {
 
+	public static void copyAny(
+			final Object src,
+			final int srcPos,
+			final Object dest,
+			final int destPos,
+			final int length ) throws IllegalArgumentException
+	{
+		if ( src instanceof ByteAccess && dest instanceof ByteAccess )
+		{
+			copy( ( ByteAccess ) src, srcPos, ( ByteAccess ) dest, destPos, length );
+		}
+		else if ( src instanceof CharAccess && dest instanceof CharAccess )
+		{
+			copy( ( CharAccess ) src, srcPos, ( CharAccess ) dest, destPos, length );
+		}
+		else if ( src instanceof DoubleAccess && dest instanceof DoubleAccess )
+		{
+			copy( ( DoubleAccess ) src, srcPos, ( DoubleAccess ) dest, destPos, length );
+		}
+		else if ( src instanceof FloatAccess && dest instanceof FloatAccess )
+		{
+			copy( ( FloatAccess ) src, srcPos, ( FloatAccess ) dest, destPos, length );
+		}
+		else if ( src instanceof IntAccess && dest instanceof IntAccess )
+		{
+			copy( ( IntAccess ) src, srcPos, ( IntAccess ) dest, destPos, length );
+		}
+		else if ( src instanceof LongAccess && dest instanceof LongAccess )
+		{
+			copy( ( LongAccess ) src, srcPos, ( LongAccess ) dest, destPos, length );
+		}
+		else if ( src instanceof ShortAccess && dest instanceof ShortAccess )
+		{
+			copy( ( ShortAccess ) src, srcPos, ( ShortAccess ) dest, destPos, length );
+		}
+		else
+		{
+			throw new IllegalArgumentException( "Expected src and dest to be same access type but got " + src.getClass().getName() + " (src) and " + dest.getClass().getName() + " (dest)." );
+		}
+
+	}
+
 	/**
 	 *
 	 * Following {@link System#arraycopy}, copies {@code length} elements from
