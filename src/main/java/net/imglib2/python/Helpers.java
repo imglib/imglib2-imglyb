@@ -141,7 +141,7 @@ public class Helpers
 		final UncheckedVolatileCache< Long, Cell< A > > unchecked = volatileCache.unchecked();
 		final Get< Cell< A > > get = new GetFromUncheckedCache<>( unchecked );
 		final VolatileCachedCellImg< T, A > volatileImg = new VolatileCachedCellImg<>( grid, type, hints, get );
-		img.randomAccess();
+//		img.randomAccess();
 		return volatileImg;
 	}
 
