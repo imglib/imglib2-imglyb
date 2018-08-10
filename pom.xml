@@ -14,7 +14,7 @@
 
 	<name>ImgLib2 ImgLyb</name>
 	<description>Build fat jar that contains all ImgLib2 and BigDataViewer dependencies that are necessary to access ImgLib2 from Python.</description>
-	<url>https://github.com/hanslovsky/imglib2-imglyb</url>
+	<url>https://github.com/imglib/imglib2-imglyb</url>
 	<inceptionYear>2017</inceptionYear>
 	<organization>
 		<name>ImgLib2</name>
@@ -63,14 +63,14 @@
 	</mailingLists>
 
 	<scm>
-		<connection>scm:git:git://github.com/hanslovsky/imglib2-imglyb</connection>
-		<developerConnection>scm:git:git@github.com:hanslovsky/imglib2-imglyb</developerConnection>
+		<connection>scm:git:git://github.com/imglib/imglib2-imglyb</connection>
+		<developerConnection>scm:git:git@github.com:imglib/imglib2-imglyb</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/hanslovsky/imglib2-imglyb</url>
+		<url>https://github.com/imglib/imglib2-imglyb</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/hanslovsky/imglib2-imglyb/issues</url>
+		<url>https://github.com/imglib/imglib2-imglyb/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
