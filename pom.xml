@@ -13,7 +13,7 @@
 	<version>0.2.3-SNAPSHOT</version>
 
 	<name>ImgLib2 ImgLyb</name>
-	<description>Build fat jar that contains all ImgLib2 and BigDataViewer dependencies that are necessary to access ImgLib2 from Python.</description>
+	<description>Utility and helper methods to facilitate python imglib2 interaction with shared memory.</description>
 	<url>https://github.com/imglib/imglib2-imglyb</url>
 	<inceptionYear>2017</inceptionYear>
 	<organization>
