@@ -10,7 +10,7 @@
 
 	<groupId>net.imglib</groupId>
 	<artifactId>imglib2-imglyb</artifactId>
-	<version>0.2.3-SNAPSHOT</version>
+	<version>0.3.0</version>
 
 	<name>ImgLib2 ImgLyb</name>
 	<description>Utility and helper methods to facilitate python imglib2 interaction with shared memory.</description>
