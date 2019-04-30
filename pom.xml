@@ -5,10 +5,11 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>23.1.1</version>
+		<version>26.0.0</version>
+		<relativePath />
 	</parent>
 
-	<groupId>net.imglib</groupId>
+	<groupId>net.imglib2</groupId>
 	<artifactId>imglib2-imglyb</artifactId>
 	<version>0.3.1-SNAPSHOT</version>
 
@@ -87,8 +88,8 @@
 	<repositories>
 		<!-- NB: for SciJava dependencies -->
 		<repository>
-			<id>imagej.public</id>
-			<url>https://maven.imagej.net/content/groups/public</url>
+			<id>scijava.public</id>
+			<url>https://maven.scijava.org/content/groups/public</url>
 		</repository>
 	</repositories>
 
