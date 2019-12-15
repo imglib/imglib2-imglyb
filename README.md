@@ -1,3 +1,5 @@
+[![](https://travis-ci.com/imglib/imglib2-imglyb.svg?branch=master)](https://travis-ci.com/imglib/imglib2-imglyb)
+
 [![Join the chat at https://gitter.im/imglib2-imglyb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib2-imglyb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **IMPORTANT NOTE** The python code has been extracted into a [imglib/imglyb](https://github.com/imglib/imglyb). This repository contains Java code only now. To install the python package from conda, run
