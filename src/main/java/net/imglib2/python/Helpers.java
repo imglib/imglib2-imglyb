@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.LongFunction;
 
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
@@ -176,7 +177,7 @@ public class Helpers
 	public static < T extends NativeType< T >, A > CachedCellImg< T, A > imgFromFunc(
 			final long[] dims,
 			final int[] blockSize,
-			final Function< Long, A > makeAccess,
+			final LongFunction< A > makeAccess,
 			final T t,
 			final A a )
 	{
@@ -229,9 +230,9 @@ public class Helpers
 
 		private final CellGrid grid;
 
-		private final BiFunction< Long, Integer, A > makeAccess;
+		private final LongFunction< A > makeAccess;
 
-		private CellLoaderFromFunction( final CellGrid grid, final BiFunction< Long, Integer, A > makeAccess )
+		private CellLoaderFromFunction( final CellGrid grid, final LongFunction< A > makeAccess )
 		{
 			this.grid = grid;
 			this.makeAccess = makeAccess;
@@ -245,7 +246,7 @@ public class Helpers
 			Arrays.setAll( pos, d -> min[ d ] / grid.cellDimension( d ) );
 			final long linearIndex = IntervalIndexer.positionToIndex( pos, grid.getGridDimensions() );
 			final int size = ( int ) Intervals.numElements( cell );
-			final A access = makeAccess.apply( linearIndex, size );
+			final A access = makeAccess.apply( linearIndex );
 			final Object target = cell.update( null );
 			Accesses.copyAny( access, 0, target, 0, size );
 		}
@@ -254,7 +255,7 @@ public class Helpers
 	public static < T extends NativeType< T >, A extends ArrayDataAccess< A > > CachedCellImg< T, A > imgWithCellLoaderFromFunc(
 			final long[] dims,
 			final int[] blockSize,
-			final BiFunction< Long, Integer, A > makeAccess,
+			final LongFunction< A > makeAccess,
 			final T t,
 			final A a )
 	{
