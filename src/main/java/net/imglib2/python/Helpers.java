@@ -173,7 +173,7 @@ public class Helpers
 		return cache.get( index );
 	}
 
-	public static < T extends NativeType< T >, A extends ArrayDataAccess< A > > CachedCellImg< T, A > imgFromFunc(
+	public static < T extends NativeType< T >, A > CachedCellImg< T, A > imgFromFunc(
 			final long[] dims,
 			final int[] blockSize,
 			final Function< Long, A > makeAccess,
