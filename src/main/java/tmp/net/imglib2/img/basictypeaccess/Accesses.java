@@ -87,7 +87,10 @@ public interface Accesses
 		}
 		else
 		{
-			throw new IllegalArgumentException( "Expected src and dest to be same access type but got " + src.getClass().getName() + " (src) and " + dest.getClass().getName() + " (dest)." );
+			throw new IllegalArgumentException( String.format(
+					"Expected src and dest to be same access type but got %s (src) and %s (dest).",
+					src == null ? src : src.getClass().getName(),
+					dest == null ? dest : dest.getClass().getName() ) );
 		}
 
 	}
