@@ -3,8 +3,7 @@ package net.imglib2.python;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.LongFunction;
 
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
@@ -16,6 +15,7 @@ import bdv.util.volatiles.SharedQueue;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.Cache;
+import net.imglib2.cache.LoaderCache;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.CellLoader;
 import net.imglib2.cache.img.LoadedCellCacheLoader;
@@ -30,6 +30,7 @@ import net.imglib2.cache.volatiles.VolatileCache;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.AccessFlags;
+import net.imglib2.img.basictypeaccess.Accesses;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileByteArray;
@@ -45,7 +46,6 @@ import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Pair;
 import net.imglib2.view.Views;
-import tmp.net.imglib2.img.basictypeaccess.Accesses;
 
 public class Helpers
 {
@@ -173,12 +173,13 @@ public class Helpers
 		return cache.get( index );
 	}
 
-	public static < T extends NativeType< T >, A extends ArrayDataAccess< A > > CachedCellImg< T, A > imgFromFunc(
+	public static < T extends NativeType< T >, A > CachedCellImg< T, A > imgFromFunc(
 			final long[] dims,
 			final int[] blockSize,
-			final Function< Long, A > makeAccess,
+			final LongFunction< A > makeAccess,
 			final T t,
-			final A a )
+			final A a,
+			final LoaderCache< Long, Cell< A > > cache )
 	{
 		final CellGrid cellGrid = new CellGrid( dims, blockSize );
 		final CacheLoaderFromFunction< Long, Cell< A > > loader = new CacheLoaderFromFunction<>( key -> {
@@ -193,8 +194,11 @@ public class Helpers
 			return new Cell<>( size, min, access );
 		} );
 
-		final Cache< Long, Cell< A > > cache = new SoftRefLoaderCache< Long, Cell< A > >().withLoader( loader );
-		final CachedCellImg< T, A > img = new CachedCellImg<>( cellGrid, t.getEntitiesPerPixel(), cache, a );
+		final CachedCellImg< T, A > img = new CachedCellImg<>(
+				cellGrid,
+				t.getEntitiesPerPixel(),
+				cache.withLoader( loader ),
+				a );
 		img.setLinkedType( ( T ) t.getNativeTypeFactory().createLinkedType( ( NativeImg ) img ) );
 		return img;
 	}
@@ -229,9 +233,9 @@ public class Helpers
 
 		private final CellGrid grid;
 
-		private final BiFunction< Long, Integer, A > makeAccess;
+		private final LongFunction< A > makeAccess;
 
-		private CellLoaderFromFunction( final CellGrid grid, final BiFunction< Long, Integer, A > makeAccess )
+		private CellLoaderFromFunction( final CellGrid grid, final LongFunction< A > makeAccess )
 		{
 			this.grid = grid;
 			this.makeAccess = makeAccess;
@@ -245,7 +249,7 @@ public class Helpers
 			Arrays.setAll( pos, d -> min[ d ] / grid.cellDimension( d ) );
 			final long linearIndex = IntervalIndexer.positionToIndex( pos, grid.getGridDimensions() );
 			final int size = ( int ) Intervals.numElements( cell );
-			final A access = makeAccess.apply( linearIndex, size );
+			final A access = makeAccess.apply( linearIndex );
 			final Object target = cell.update( null );
 			Accesses.copyAny( access, 0, target, 0, size );
 		}
@@ -254,9 +258,10 @@ public class Helpers
 	public static < T extends NativeType< T >, A extends ArrayDataAccess< A > > CachedCellImg< T, A > imgWithCellLoaderFromFunc(
 			final long[] dims,
 			final int[] blockSize,
-			final BiFunction< Long, Integer, A > makeAccess,
+			final LongFunction< A > makeAccess,
 			final T t,
-			final A a )
+			final A a,
+			final LoaderCache< Long, Cell< A > > cache )
 	{
 		final CellGrid cellGrid = new CellGrid( dims, blockSize );
 		final CellLoaderFromFunction< T, A > cellLoader = new CellLoaderFromFunction<>( cellGrid, makeAccess );
@@ -266,8 +271,7 @@ public class Helpers
 				t,
 				AccessFlags.ofAccess( a ) );
 
-		final Cache< Long, Cell< A > > cache = new SoftRefLoaderCache< Long, Cell< A > >().withLoader( loader );
-		final CachedCellImg< T, A > img = new CachedCellImg<>( cellGrid, t.getEntitiesPerPixel(), cache, a );
+		final CachedCellImg< T, A > img = new CachedCellImg<>( cellGrid, t.getEntitiesPerPixel(), cache.withLoader( loader ), a );
 		img.setLinkedType( ( T ) t.getNativeTypeFactory().createLinkedType( ( NativeImg ) img ) );
 		return img;
 	}
