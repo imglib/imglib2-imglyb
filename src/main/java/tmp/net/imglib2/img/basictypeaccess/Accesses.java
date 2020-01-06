@@ -41,6 +41,36 @@ import net.imglib2.img.basictypeaccess.FloatAccess;
 import net.imglib2.img.basictypeaccess.IntAccess;
 import net.imglib2.img.basictypeaccess.LongAccess;
 import net.imglib2.img.basictypeaccess.ShortAccess;
+import net.imglib2.img.basictypeaccess.array.AbstractByteArray;
+import net.imglib2.img.basictypeaccess.array.AbstractCharArray;
+import net.imglib2.img.basictypeaccess.array.AbstractDoubleArray;
+import net.imglib2.img.basictypeaccess.array.AbstractFloatArray;
+import net.imglib2.img.basictypeaccess.array.AbstractIntArray;
+import net.imglib2.img.basictypeaccess.array.AbstractLongArray;
+import net.imglib2.img.basictypeaccess.array.AbstractShortArray;
+import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
+import net.imglib2.img.basictypeaccess.array.ByteArray;
+import net.imglib2.img.basictypeaccess.array.CharArray;
+import net.imglib2.img.basictypeaccess.array.DoubleArray;
+import net.imglib2.img.basictypeaccess.array.FloatArray;
+import net.imglib2.img.basictypeaccess.array.IntArray;
+import net.imglib2.img.basictypeaccess.array.LongArray;
+import net.imglib2.img.basictypeaccess.array.ShortArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileByteArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileCharArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileDoubleArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileFloatArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileIntArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileLongArray;
+import net.imglib2.img.basictypeaccess.volatiles.array.VolatileShortArray;
+import net.imglib2.img.basictypelongaccess.unsafe.ByteUnsafe;
+import net.imglib2.img.basictypelongaccess.unsafe.CharUnsafe;
+import net.imglib2.img.basictypelongaccess.unsafe.DoubleUnsafe;
+import net.imglib2.img.basictypelongaccess.unsafe.FloatUnsafe;
+import net.imglib2.img.basictypelongaccess.unsafe.IntUnsafe;
+import net.imglib2.img.basictypelongaccess.unsafe.LongUnsafe;
+import net.imglib2.img.basictypelongaccess.unsafe.ShortUnsafe;
+import net.imglib2.type.PrimitiveType;
 
 /**
  * Utility and helper methods for accesses ({@link ByteAccess} etc).
@@ -49,6 +79,105 @@ import net.imglib2.img.basictypeaccess.ShortAccess;
  */
 public interface Accesses
 {
+
+	public static ArrayDataAccess< ? > asArrayAccess(
+			final long address,
+			final int size,
+			final boolean volatil,
+			final PrimitiveType type )
+	{
+		switch ( type )
+		{
+		case BYTE:
+			return asByteArray( address, size, volatil );
+		case CHAR:
+			return asCharArray( address, size, volatil );
+		case SHORT:
+			return asShortArray( address, size, volatil );
+		case INT:
+			return asIntArray( address, size, volatil );
+		case LONG:
+			return asLongArray( address, size, volatil );
+		case FLOAT:
+			return asFloatArray( address, size, volatil );
+		case DOUBLE:
+			return asDoubleArray( address, size, volatil );
+		case UNDEFINED:
+		case BOOLEAN:
+		default:
+			throw new IllegalArgumentException( "Converting access for primtive type not supported: " + type );
+		}
+	}
+
+	public static AbstractByteArray< ? > asByteArray(
+			final long address,
+			final int size,
+			final boolean volatil )
+	{
+		final AbstractByteArray< ? > access = volatil ? new VolatileByteArray( size, true ) : new ByteArray( size );
+		copyAny( new ByteUnsafe( address ), 0, access, 0, size );
+		return access;
+	}
+
+	public static AbstractCharArray< ? > asCharArray(
+			final long address,
+			final int size,
+			final boolean volatil )
+	{
+		final AbstractCharArray< ? > access = volatil ? new VolatileCharArray( size, true ) : new CharArray( size );
+		copyAny( new CharUnsafe( address ), 0, access, 0, size );
+		return access;
+	}
+
+	public static AbstractShortArray< ? > asShortArray(
+			final long address,
+			final int size,
+			final boolean volatil )
+	{
+		final AbstractShortArray< ? > access = volatil ? new VolatileShortArray( size, true ) : new ShortArray( size );
+		copyAny( new ShortUnsafe( address ), 0, access, 0, size );
+		return access;
+	}
+
+	public static AbstractIntArray< ? > asIntArray(
+			final long address,
+			final int size,
+			final boolean volatil )
+	{
+		final AbstractIntArray< ? > access = volatil ? new VolatileIntArray( size, true ) : new IntArray( size );
+		copyAny( new IntUnsafe( address ), 0, access, 0, size );
+		return access;
+	}
+
+	public static AbstractLongArray< ? > asLongArray(
+			final long address,
+			final int size,
+			final boolean volatil )
+	{
+		final AbstractLongArray< ? > access = volatil ? new VolatileLongArray( size, true ) : new LongArray( size );
+		copyAny( new LongUnsafe( address ), 0, access, 0, size );
+		return access;
+	}
+
+	public static AbstractFloatArray< ? > asFloatArray(
+			final long address,
+			final int size,
+			final boolean volatil )
+	{
+		final AbstractFloatArray< ? > access = volatil ? new VolatileFloatArray( size, true ) : new FloatArray( size );
+		copyAny( new FloatUnsafe( address ), 0, access, 0, size );
+		return access;
+	}
+
+	public static AbstractDoubleArray< ? > asDoubleArray(
+			final long address,
+			final int size,
+			final boolean volatil )
+	{
+		final AbstractDoubleArray< ? > access = volatil ? new VolatileDoubleArray( size, true ) : new DoubleArray( size );
+		copyAny( new DoubleUnsafe( address ), 0, access, 0, size );
+		return access;
+	}
 
 	public static void copyAny(
 			final Object src,
