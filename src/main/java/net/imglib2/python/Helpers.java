@@ -3,8 +3,6 @@ package net.imglib2.python;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.LongFunction;
 
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
@@ -32,6 +30,7 @@ import net.imglib2.cache.volatiles.VolatileCache;
 import net.imglib2.img.NativeImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.AccessFlags;
+import net.imglib2.img.basictypeaccess.Accesses;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileByteArray;
@@ -47,7 +46,6 @@ import net.imglib2.util.IntervalIndexer;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Pair;
 import net.imglib2.view.Views;
-import tmp.net.imglib2.img.basictypeaccess.Accesses;
 
 public class Helpers
 {
