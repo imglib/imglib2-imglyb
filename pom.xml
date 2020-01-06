@@ -83,7 +83,7 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Howard Hughes Medical Institute.</license.copyrightOwners>
 
-		<imglib2-unsafe.version>0.2.1-SNAPSHOT</imglib2-unsafe.version>
+		<imglib2-unsafe.version>0.3.1</imglib2-unsafe.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
