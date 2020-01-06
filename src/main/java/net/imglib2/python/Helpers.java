@@ -17,6 +17,7 @@ import bdv.util.volatiles.SharedQueue;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.Cache;
+import net.imglib2.cache.LoaderCache;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.CellLoader;
 import net.imglib2.cache.img.LoadedCellCacheLoader;
@@ -179,7 +180,8 @@ public class Helpers
 			final int[] blockSize,
 			final LongFunction< A > makeAccess,
 			final T t,
-			final A a )
+			final A a,
+			final LoaderCache< Long, Cell< A > > cache )
 	{
 		final CellGrid cellGrid = new CellGrid( dims, blockSize );
 		final CacheLoaderFromFunction< Long, Cell< A > > loader = new CacheLoaderFromFunction<>( key -> {
@@ -194,8 +196,11 @@ public class Helpers
 			return new Cell<>( size, min, access );
 		} );
 
-		final Cache< Long, Cell< A > > cache = new SoftRefLoaderCache< Long, Cell< A > >().withLoader( loader );
-		final CachedCellImg< T, A > img = new CachedCellImg<>( cellGrid, t.getEntitiesPerPixel(), cache, a );
+		final CachedCellImg< T, A > img = new CachedCellImg<>(
+				cellGrid,
+				t.getEntitiesPerPixel(),
+				cache.withLoader( loader ),
+				a );
 		img.setLinkedType( ( T ) t.getNativeTypeFactory().createLinkedType( ( NativeImg ) img ) );
 		return img;
 	}
@@ -257,7 +262,8 @@ public class Helpers
 			final int[] blockSize,
 			final LongFunction< A > makeAccess,
 			final T t,
-			final A a )
+			final A a,
+			final LoaderCache< Long, Cell< A > > cache )
 	{
 		final CellGrid cellGrid = new CellGrid( dims, blockSize );
 		final CellLoaderFromFunction< T, A > cellLoader = new CellLoaderFromFunction<>( cellGrid, makeAccess );
@@ -267,8 +273,7 @@ public class Helpers
 				t,
 				AccessFlags.ofAccess( a ) );
 
-		final Cache< Long, Cell< A > > cache = new SoftRefLoaderCache< Long, Cell< A > >().withLoader( loader );
-		final CachedCellImg< T, A > img = new CachedCellImg<>( cellGrid, t.getEntitiesPerPixel(), cache, a );
+		final CachedCellImg< T, A > img = new CachedCellImg<>( cellGrid, t.getEntitiesPerPixel(), cache.withLoader( loader ), a );
 		img.setLinkedType( ( T ) t.getNativeTypeFactory().createLinkedType( ( NativeImg ) img ) );
 		return img;
 	}
