@@ -30,29 +30,24 @@
 
 	<developers>
 		<developer>
-			<id>hanslovsky</id>
-			<name>Philipp Hanslovsky</name>
-			<url>https://imagej.net/User:Hanslovsky</url>
+			<id>ctrueden</id>
+			<name>Curtis Rueden</name>
+			<url>https://imagej.net/User:Rueden</url>
 			<roles>
-				<role>founder</role>
-				<role>lead</role>
-				<role>developer</role>
-				<role>debugger</role>
-				<role>reviewer</role>
-				<role>support</role>
 				<role>maintainer</role>
 			</roles>
 		</developer>
 	</developers>
 	<contributors>
 		<contributor>
-			<name>Donald Olbris</name>
-			<properties><id>olbris</id></properties>
+			<name>Philipp Hanslovsky</name>
+			<properties><id>hanslovsky</id></properties>
+			<url>https://imagej.net/User:Hanslovsky</url>
+			<roles><role>founder</role></roles>
 		</contributor>
 		<contributor>
-			<name>Curtis Rueden</name>
-			<url>https://imagej.net/User:Rueden</url>
-			<properties><id>ctrueden</id></properties>
+			<name>Donald Olbris</name>
+			<properties><id>olbris</id></properties>
 		</contributor>
 	</contributors>
 
