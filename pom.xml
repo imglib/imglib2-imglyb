@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>27.0.1</version>
+		<version>29.2.1</version>
 		<relativePath />
 	</parent>
 
@@ -78,8 +78,6 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>Howard Hughes Medical Institute.</license.copyrightOwners>
 
-		<imglib2-unsafe.version>0.3.1</imglib2-unsafe.version>
-
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 	</properties>
@@ -105,9 +103,8 @@
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-unsafe</artifactId>
-			<!-- TODO: Remove once pom-scijava manages this component. -->
-			<version>${imglib2-unsafe.version}</version>
 		</dependency>
+
 		<!-- BigDataViewer dependencies -->
 		<dependency>
 			<groupId>sc.fiji</groupId>
