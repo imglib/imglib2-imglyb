@@ -19,7 +19,7 @@
 	<inceptionYear>2017</inceptionYear>
 	<organization>
 		<name>ImgLib2</name>
-		<url>http://imglib2.net/</url>
+		<url>https://imglib2.net/</url>
 	</organization>
 	<licenses>
 		<license>
@@ -32,7 +32,7 @@
 		<developer>
 			<id>ctrueden</id>
 			<name>Curtis Rueden</name>
-			<url>https://imagej.net/User:Rueden</url>
+			<url>https://imagej.net/people/ctrueden</url>
 			<roles>
 				<role>maintainer</role>
 			</roles>
@@ -42,7 +42,7 @@
 		<contributor>
 			<name>Philipp Hanslovsky</name>
 			<properties><id>hanslovsky</id></properties>
-			<url>https://imagej.net/User:Hanslovsky</url>
+			<url>https://imagej.net/people/hanslovsky</url>
 			<roles><role>founder</role></roles>
 		</contributor>
 		<contributor>
