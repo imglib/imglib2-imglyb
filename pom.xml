@@ -69,8 +69,8 @@
 		<url>https://github.com/imglib/imglib2-imglyb/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Travis CI</system>
-		<url>https://travis-ci.com/imglib/imglib2-imglyb</url>
+		<system>GitHub Actions</system>
+		<url>https://github.com/imglib/imglib2-imglyb/actions</url>
 	</ciManagement>
 
 	<properties>
@@ -79,7 +79,7 @@
 		<license.copyrightOwners>Howard Hughes Medical Institute.</license.copyrightOwners>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
-		<releaseProfiles>deploy-to-scijava</releaseProfiles>
+		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
 	</properties>
 
 	<repositories>

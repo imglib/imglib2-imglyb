@@ -1,4 +1,4 @@
-[![](https://travis-ci.com/imglib/imglib2-imglyb.svg?branch=master)](https://travis-ci.com/imglib/imglib2-imglyb)
+[![](https://github.com/imglib/imglib2-imglyb/actions/workflows/build-main.yml/badge.svg)](https://github.com/imglib/imglib2-imglyb/actions/workflows/build-main.yml)
 
 [![Join the chat at https://gitter.im/imglib2-imglyb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/imglib2-imglyb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
