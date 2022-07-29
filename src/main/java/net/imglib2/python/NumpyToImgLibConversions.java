@@ -32,6 +32,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.readwrite.longaccess.ARGBLongAccessTypeARGBTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.ByteLongAccessTypeByteTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.ByteLongAccessTypeNativeBoolTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.ComplexDoubleLongAccessTypeComplexDoubleTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.ComplexFloatLongAccessTypeComplexFloatTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.DoubleLongAccessTypeDoubleTypeConverter;
@@ -44,12 +45,14 @@ import net.imglib2.converter.readwrite.longaccess.UnsignedIntLongAccessTypeUnsig
 import net.imglib2.converter.readwrite.longaccess.UnsignedLongLongAccessTypeUnsignedLongTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.UnsignedShortLongAccessTypeUnsignedShortTypeConverter;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypeaccess.BooleanAccess;
 import net.imglib2.img.basictypelongaccess.ByteLongAccess;
 import net.imglib2.img.basictypelongaccess.DoubleLongAccess;
 import net.imglib2.img.basictypelongaccess.FloatLongAccess;
 import net.imglib2.img.basictypelongaccess.IntLongAccess;
 import net.imglib2.img.basictypelongaccess.LongLongAccess;
 import net.imglib2.img.basictypelongaccess.ShortLongAccess;
+import net.imglib2.img.basictypelongaccess.unsafe.BooleanUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.ByteUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.DoubleUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.FloatUnsafe;
@@ -58,6 +61,7 @@ import net.imglib2.img.basictypelongaccess.unsafe.LongUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.ShortUnsafe;
 import net.imglib2.img.unsafe.UnsafeImg;
 import net.imglib2.img.unsafe.UnsafeImgs;
+import net.imglib2.type.logic.NativeBoolType;
 import net.imglib2.type.numeric.ARGBLongAccessType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.complex.ComplexDoubleLongAccessType;
@@ -182,6 +186,25 @@ public class NumpyToImgLibConversions
 		{
 			final UnsafeImg< DoubleLongAccessType, DoubleUnsafe > img = UnsafeImgs.doubles( access, dim );
 			return Converters.convertRandomAccessibleIterableInterval( img, new DoubleLongAccessTypeDoubleTypeConverter() );
+		}
+	}
+
+	public static RandomAccessibleInterval<NativeBoolType> toNativeBool( final long address, final long... dim )
+	{
+		final long numElements = Intervals.numElements( dim );
+		if ( numElements < Integer.MAX_VALUE )
+		{
+			final BooleanUnsafe access = new BooleanUnsafe( address );
+			final ArrayImg< NativeBoolType, BooleanAccess > img = new ArrayImg<>( access, dim, new Fraction() );
+			final NativeBoolType linkedType = new NativeBoolType( img );
+			img.setLinkedType( linkedType );
+			return img;
+		}
+		else
+		{
+			final ByteUnsafe access = new ByteUnsafe( address );
+			final UnsafeImg< ByteLongAccessType, ByteLongAccess > img = UnsafeImgs.bytes( access, dim );
+			return Converters.convertRandomAccessibleIterableInterval( img, new ByteLongAccessTypeNativeBoolTypeConverter() );
 		}
 	}
 
