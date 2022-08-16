@@ -32,6 +32,7 @@ import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.array.ArrayImg;
+import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningBooleanUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningByteUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningDoubleUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningFloatUnsafe;
@@ -39,6 +40,7 @@ import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningIntUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningLongUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.owning.OwningShortUnsafe;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.logic.NativeBoolType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.complex.ComplexDoubleType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
@@ -107,6 +109,13 @@ public class ArrayImgWithUnsafeStoreFactory< T extends NativeType< T > > extends
 		{
 			final ArrayImg< FloatType, OwningFloatUnsafe > img = new ArrayImg<>( new OwningFloatUnsafe( numEntities ), dim, new Fraction() );
 			img.setLinkedType( new FloatType( img ) );
+			return ( Img< T > ) img;
+		}
+
+		if ( type instanceof NativeBoolType )
+		{
+			final ArrayImg< NativeBoolType, OwningBooleanUnsafe > img = new ArrayImg<>( new OwningBooleanUnsafe( numEntities ), dim, new Fraction() );
+			img.setLinkedType( new NativeBoolType( img ) );
 			return ( Img< T > ) img;
 		}
 
