@@ -46,6 +46,11 @@
 			<roles><role>founder</role></roles>
 		</contributor>
 		<contributor>
+			<name>Gabriel Selzer</name>
+			<url>https://imagej.net/people/gselzer</url>
+			<properties><id>gselzer</id></properties>
+		</contributor>
+		<contributor>
 			<name>Donald Olbris</name>
 			<properties><id>olbris</id></properties>
 		</contributor>
