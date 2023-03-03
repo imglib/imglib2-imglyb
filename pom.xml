@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>31.1.0</version>
+		<version>34.0.0</version>
 		<relativePath />
 	</parent>
 
@@ -44,6 +44,11 @@
 			<properties><id>hanslovsky</id></properties>
 			<url>https://imagej.net/people/hanslovsky</url>
 			<roles><role>founder</role></roles>
+		</contributor>
+		<contributor>
+			<name>Gabriel Selzer</name>
+			<url>https://imagej.net/people/gselzer</url>
+			<properties><id>gselzer</id></properties>
 		</contributor>
 		<contributor>
 			<name>Donald Olbris</name>

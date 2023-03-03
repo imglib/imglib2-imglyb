@@ -2,7 +2,7 @@
  * #%L
  * Utility and helper methods to facilitate python imglib2 interaction with shared memory.
  * %%
- * Copyright (C) 2017 - 2021 Howard Hughes Medical Institute.
+ * Copyright (C) 2017 - 2023 Howard Hughes Medical Institute.
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,6 +32,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.readwrite.longaccess.ARGBLongAccessTypeARGBTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.ByteLongAccessTypeByteTypeConverter;
+import net.imglib2.converter.readwrite.longaccess.ByteLongAccessTypeNativeBoolTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.ComplexDoubleLongAccessTypeComplexDoubleTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.ComplexFloatLongAccessTypeComplexFloatTypeConverter;
 import net.imglib2.converter.readwrite.longaccess.DoubleLongAccessTypeDoubleTypeConverter;
@@ -53,6 +54,7 @@ import net.imglib2.img.basictypelongaccess.unsafe.IntUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.LongUnsafe;
 import net.imglib2.img.basictypelongaccess.unsafe.ShortUnsafe;
 import net.imglib2.python.img.strided.StridedImg;
+import net.imglib2.type.logic.NativeBoolType;
 import net.imglib2.type.numeric.ARGBLongAccessType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.complex.ComplexDoubleLongAccessType;
@@ -125,6 +127,14 @@ public class NumpyToImgLibConversionsWithStride
 		final StridedImg< DoubleLongAccessType, DoubleUnsafe > img = new StridedImg<>( access, dim, stride, new Fraction() );
 		img.setLinkedType( new DoubleLongAccessType( img ) );
 		return Converters.convertRandomAccessibleIterableInterval( img, new DoubleLongAccessTypeDoubleTypeConverter() );
+	}
+
+	public static RandomAccessibleInterval<NativeBoolType> toNativeBool( final long address, final long[] stride, final long[] dim )
+	{
+		final ByteUnsafe access = new ByteUnsafe( address );
+		final StridedImg< ByteLongAccessType, ByteUnsafe > img = new StridedImg<>( access, dim, stride, new Fraction() );
+		img.setLinkedType( new ByteLongAccessType( img ) );
+		return Converters.convertRandomAccessibleIterableInterval( img, new ByteLongAccessTypeNativeBoolTypeConverter() );
 	}
 
 	public static RandomAccessibleInterval< ByteType > toByte( final long address, final long[] stride, final long[] dim )
