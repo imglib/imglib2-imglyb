@@ -59,6 +59,7 @@ import net.imglib2.img.NativeImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.basictypeaccess.AccessFlags;
 import net.imglib2.img.basictypeaccess.Accesses;
+import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileByteArray;
@@ -201,7 +202,7 @@ public class Helpers
 		return cache.get( index );
 	}
 
-	public static < T extends NativeType< T >, A > CachedCellImg< T, A > imgFromFunc(
+	public static < T extends NativeType< T >, A extends DataAccess > CachedCellImg< T, A > imgFromFunc(
 			final long[] dims,
 			final int[] blockSize,
 			final LongFunction< A > makeAccess,
