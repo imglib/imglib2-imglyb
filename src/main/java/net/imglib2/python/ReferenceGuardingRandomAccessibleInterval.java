@@ -69,4 +69,9 @@ public class ReferenceGuardingRandomAccessibleInterval< T > extends AbstractWrap
 		return sourceInterval.randomAccess( interval );
 	}
 
+	@Override
+	public T getType()
+	{
+		return sourceInterval.getType();
+	}
 }
