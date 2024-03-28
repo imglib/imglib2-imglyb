@@ -103,4 +103,9 @@ public class StridedImg< T extends NativeLongAccessType< T >, A > extends Abstra
 		return null;
 	}
 
+	@Override
+	public T getType()
+	{
+		return linkedType;
+	}
 }
