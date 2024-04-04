@@ -29,6 +29,7 @@
 package net.imglib2.python;
 
 import net.imglib2.AbstractWrappedInterval;
+import net.imglib2.Cursor;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
@@ -73,5 +74,29 @@ public class ReferenceGuardingRandomAccessibleInterval< T > extends AbstractWrap
 	public T getType()
 	{
 		return sourceInterval.getType();
+	}
+
+	@Override
+	public Cursor< T > cursor()
+	{
+		return sourceInterval.cursor();
+	}
+
+	@Override
+	public Cursor< T > localizingCursor()
+	{
+		return sourceInterval.localizingCursor();
+	}
+
+	@Override
+	public Object iterationOrder()
+	{
+		return sourceInterval.iterationOrder();
+	}
+
+	@Override
+	public long size()
+	{
+		return sourceInterval.size();
 	}
 }
