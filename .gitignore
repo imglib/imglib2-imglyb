@@ -1,7 +1,9 @@
 .classpath
 .project
 .settings
+.factorypath
 target
 __pycache__
 build
 *.pyc
+.idea/
